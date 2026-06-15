@@ -96,7 +96,7 @@
       </div>
     </header>
 
-    <!-- MAIN VIEW (pb-24 untuk menyisakan ruang navigasi bawah pada HP) -->
+    <!-- MAIN VIEW -->
     <main
       class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 pb-24 md:pb-8 z-10"
     >
@@ -112,7 +112,7 @@
             <span
               class="px-2.5 py-0.5 bg-white/20 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest inline-flex items-center gap-1"
             >
-              ✨ IT Support No.1 di Kediri
+              ✨ IT Support & Premium Tech Kediri
             </span>
             <h1
               class="font-display font-black text-xl sm:text-3xl md:text-5xl leading-tight"
@@ -153,7 +153,7 @@
               class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
             />
           </div>
-<!-- Kategori bisa digeser ke samping di HP (Swipeable) -->
+          <!-- Kategori Swipeable di HP (URUTAN TERBARU) -->
           <div
             class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
             id="categories-list"
@@ -172,16 +172,34 @@
               Laptop
             </button>
             <button
-              onclick="filterCategory('PC dan Monitor')"
+              onclick="filterCategory('AIO dan PC')"
               class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
             >
-              PC & Monitor
+              AIO dan PC
+            </button>
+            <button
+              onclick="filterCategory('Monitor')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Monitor
+            </button>
+            <button
+              onclick="filterCategory('Printer & Scanner')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Printer & Scanner
             </button>
             <button
               onclick="filterCategory('Networking')"
               class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
             >
               Networking
+            </button>
+            <button
+              onclick="filterCategory('Aksesoris Lainnya')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Aksesoris Lainnya
             </button>
           </div>
         </div>
@@ -363,11 +381,11 @@
         <p>
           © 2026 Aditya Computer Kediri. Hak Cipta Dilindungi Undang-Undang.
         </p>
-        <p class="text-slate-600">Desain By Tatang.</p>
+        <p class="text-slate-600">Desain Statis Modern & Ringan.</p>
       </div>
     </footer>
 
-    <!-- STICKY BOTTOM NAVIGATION BAR (KHUSUS TAMPILAN MOBILE/SMARTPHONE) -->
+    <!-- STICKY BOTTOM NAVIGATION BAR -->
     <div
       class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 h-16 flex items-center justify-around z-40 px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]"
     >
@@ -542,26 +560,22 @@
 
       // Navigasi Tab Universal (Mendukung Desktop & Mobile Bar)
       function switchTab(tabName) {
-        // Sembunyikan halaman lama & nonaktifkan navigasi desktop lama
         document.getElementById(`tab-${currentTab}`).classList.add("hidden");
         document
           .getElementById(`nav-${currentTab}`)
           ?.classList.remove("text-red-600", "bg-red-50/50", "font-bold");
 
-        // Nonaktifkan navigasi mobile lama
         const mobPrevBtn = document.getElementById(`mob-nav-${currentTab}`);
         if (mobPrevBtn) {
           mobPrevBtn.classList.remove("text-red-600", "font-bold");
           mobPrevBtn.classList.add("text-slate-500");
         }
 
-        // Tampilkan halaman baru & aktifkan navigasi desktop baru
         document.getElementById(`tab-${tabName}`).classList.remove("hidden");
         document
           .getElementById(`nav-${tabName}`)
           ?.classList.add("text-red-600", "bg-red-50/50", "font-bold");
 
-        // Aktifkan navigasi mobile baru
         const mobNewBtn = document.getElementById(`mob-nav-${tabName}`);
         if (mobNewBtn) {
           mobNewBtn.classList.remove("text-slate-500");
@@ -569,10 +583,10 @@
         }
 
         currentTab = tabName;
-        window.scrollTo({ top: 0, behavior: "smooth" }); // Otomatis scroll ke atas dengan efek halus saat ganti tab
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      // Render Produk (Tampilan Grid responsif 2 kolom di HP)
+      // Render Produk (Dirombak Bebas Dari Nested Backticks agar Prettier VS Code Berfungsi 100%)
       function renderProducts(data) {
         const grid = document.getElementById("product-grid");
         grid.innerHTML = "";
@@ -587,26 +601,33 @@
         }
 
         data.forEach((prod) => {
-          // Opsi A: Tampilkan seluruh spesifikasi tanpa terpotong
           const specBadges = prod.specs
             .map(
               (s) =>
                 `<span class="text-[9px] bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded-sm truncate max-w-[120px]">${s}</span>`,
             )
             .join("");
+
           const outOfStock = prod.stock === 0;
+
+          // Variabel pembantu HTML independen (Menghindari kerancuan compiler Prettier)
+          const labelHabisHtml = outOfStock
+            ? '<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="text-white text-[10px] md:text-xs font-bold px-2 py-1 bg-red-600 rounded">HABIS</span></div>'
+            : "";
+
+          const tombolBeliHtml = outOfStock
+            ? '<button disabled class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all bg-slate-100 text-slate-400 cursor-not-allowed">Beli</button>'
+            : `<button onclick="addToCart('${prod.id}')" class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all cursor-pointer bg-red-600 text-white hover:bg-red-700">Beli</button>`;
 
           const cardHtml = `
                     <div class="bento-card flex flex-col justify-between h-full bg-white border border-slate-100 rounded-xl md:rounded-2xl overflow-hidden group shadow-xs">
-                        <!-- Kontainer Gambar (Perbaikan visual kelas bg-slate-100) -->
                         <div class="relative h-32 md:h-48 bg-slate-100/60 flex items-center justify-center p-2 md:p-4">
                             <img src="${prod.image}" alt="${prod.name}" 
                                  onclick="openLightbox('${prod.image}')" 
                                  class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 cursor-zoom-in" 
                                  title="Klik untuk memperbesar">
-                            ${outOfStock ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="text-white text-[10px] md:text-xs font-bold px-2 py-1 bg-red-600 rounded">HABIS</span></div>` : ""}
+                            ${labelHabisHtml}
                         </div>
-                        <!-- Informasi Detail -->
                         <div class="p-3 md:p-5 flex-grow flex flex-col justify-between gap-1.5 md:gap-3">
                             <div class="space-y-1 md:space-y-2">
                                 <span class="text-[9px] md:text-[10px] text-red-600 font-bold tracking-wider uppercase">${prod.category}</span>
@@ -616,9 +637,7 @@
                             </div>
                             <div class="pt-2 md:pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 md:gap-2">
                                 <span class="font-display font-bold text-red-700 text-xs sm:text-sm md:text-base">${formatRupiah(prod.price)}</span>
-                                <button onclick="addToCart('${prod.id}')" ${outOfStock ? "disabled" : ""} class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all cursor-pointer ${outOfStock ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700"}">
-                                    Beli
-                                </button>
+                                ${tombolBeliHtml}
                             </div>
                         </div>
                     </div>`;
@@ -639,7 +658,6 @@
                                 <h3 class="font-display font-bold text-slate-900 line-clamp-2">${art.title}</h3>
                                 <p class="text-xs text-slate-500 line-clamp-3">${art.excerpt}</p>
                             </div>
-                            <!-- Perbaikan Bug String Escaping (Ganti ke readArticle) -->
                             <button onclick="readArticle('${art.id}')" class="w-full mt-4 py-2 bg-slate-50 border border-slate-150 rounded-xl text-xs text-slate-700 font-bold hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer">Baca Selengkapnya</button>
                         </div>
                     </div>`;
@@ -655,16 +673,15 @@
         }
       }
 
-      // Penyaring Kategori (Perbaikan Bug Scope Event di Browser Safari/iPhone)
+      // Penyaring Kategori Stabil dan Aman di Semua Browser
       let currentCategory = "Semua";
       function filterCategory(cat) {
         currentCategory = cat;
 
-        // Atur status aktif pada tombol
         document.querySelectorAll(".category-btn").forEach((btn) => {
           btn.classList.remove("active");
-          // Otomatis deteksi elemen yang diklik secara stabil di semua browser
-          if (btn.getAttribute("onclick").includes(`'${cat}'`)) {
+          const onClickAttr = btn.getAttribute("onclick") || "";
+          if (onClickAttr.includes(`'${cat}'`)) {
             btn.classList.add("active");
           }
         });
