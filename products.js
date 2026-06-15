@@ -12,15 +12,37 @@ const PRODUCTS_DATA = [
     specs: ["Pentium Silver N5030", "8GB DDR4 RAM", "256GB SSD", "Layar 14-inch HD"]
   },
   {
+    id: "pc-01",
+    name: "PC Desktop Intel Core i5 Office",
+    brand: "Aditya",
+    category: "AIO dan PC", // 👈 Tulis persis seperti ini untuk kategori AIO dan PC
+    price: 4500000,
+    stock: 1, 
+    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
+    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
+    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
+  },
+  {
     id: "monitor-01",
     name: "Monitor Xiaomi A24i 2026",
     brand: "Xiaomi",
-    category: "PC dan Monitor",
+    category: "Monitor",
     price: 1200000,
     stock: 1,
     description: "Monitor PC bezel-less dengan warna akurat dan kenyamanan mata.",
     image: "https://i02.appmifile.com/mi-com-product/fly-birds/xiaomi-monitor-a24i-2026/pc/5a67d1fbf6c4d379a20b5ef0864cef85.jpg?f=webp",
     specs: ["Full HD 1080p", "Refresh Rate 144Hz", "Panel IPS", "Bezel-less Design"]
+  },
+   {
+    id: "printer-01",
+    name: "Printer Epson L3210",
+    brand: "Epson",
+    category: "Printer & Scanner", // 👈 Tulis persis seperti ini untuk kategori Printer & Scanner
+    price: 2400000,
+    stock: 1, 
+    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
+    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
+    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
   },
   {
     id: "net-01",
@@ -28,6 +50,17 @@ const PRODUCTS_DATA = [
     brand: "D-Link",
     category: "Networking",
     price: 165000,
+    stock: 1, 
+    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
+    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
+    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
+  },
+  {
+    id: "aksesoris-01",
+    name: "Mouse Logitech B100 USB",
+    brand: "Logitech",
+    category: "Aksesoris Lainnya", // 👈 Tulis persis seperti ini untuk kategori Aksesoris Lainnya
+    price: 65000,
     stock: 1, 
     description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
     image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
