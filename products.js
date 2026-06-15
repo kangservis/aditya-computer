@@ -13,13 +13,13 @@ const PRODUCTS_DATA = [
   },
   {
     id: "pc-01",
-    name: "PC Desktop Intel Core i5 Office",
-    brand: "Aditya",
-    category: "AIO dan PC", // 👈 Tulis persis seperti ini untuk kategori AIO dan PC
+    name: "AIO Intel Core i5 Office",
+    brand: "Advan",
+    category: "AIO dan PC", 
     price: 4500000,
     stock: 1, 
-    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
-    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
+    description: "Excellence With Style.",
+    image: "https://els.id/wp-content/uploads/2023/11/All-In-One-Advan.png",
     specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
   },
   {
