@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Aditya Computer | Toko Komputer Modern & Terpercaya</title>
+    <!-- Tailwind CSS v3 via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="globals.css" />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Outfit:wght@500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- RemixIcon CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="font-sans bg-slate-50 text-slate-900 min-h-screen flex flex-col relative select-none md:select-text"
+  >
+    <!-- HEADER / NAVIGATION (DESKTOP ONLY) -->
+    <header
+      class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs px-4 sm:px-6 lg:px-8"
+    >
+      <div class="max-w-7xl mx-auto h-16 flex items-center justify-between">
+        <!-- Logo & Brand -->
+        <div
+          class="flex items-center gap-3 cursor-pointer"
+          onclick="switchTab('home')"
+        >
+          <img
+            src="img/Fix.jpg"
+            alt="Logo Aditya Computer"
+            class="w-10 h-10 object-contain rounded-xl border border-slate-150 shadow-xs bg-white"
+          />
+          <span
+            class="font-display font-black text-lg tracking-tight text-slate-900"
+            >Aditya <span class="text-red-600">Computer</span></span
+          >
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <nav
+          class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600"
+        >
+          <button
+            onclick="switchTab('home')"
+            id="nav-home"
+            class="px-4 py-2 rounded-lg text-red-600 bg-red-50/50 font-bold transition-colors"
+          >
+            Katalog
+          </button>
+          <button
+            onclick="switchTab('artikel')"
+            id="nav-artikel"
+            class="px-4 py-2 rounded-lg hover:text-red-600 hover:bg-slate-50 transition-colors"
+          >
+            Artikel
+          </button>
+          <button
+            onclick="switchTab('lokasi')"
+            id="nav-lokasi"
+            class="px-4 py-2 rounded-lg hover:text-red-600 hover:bg-slate-50 transition-colors"
+          >
+            Lokasi Toko
+          </button>
+          <button
+            onclick="switchTab('kontak')"
+            id="nav-kontak"
+            class="px-4 py-2 rounded-lg hover:text-red-600 hover:bg-slate-50 transition-colors"
+          >
+            Hubungi Kami
+          </button>
+        </nav>
+
+        <!-- Cart Trigger -->
+        <div class="flex items-center gap-3">
+          <button
+            onclick="toggleCart(true)"
+            class="relative p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all cursor-pointer"
+          >
+            <i class="ri-shopping-cart-line text-xl"></i>
+            <span
+              id="cart-count"
+              class="hidden absolute -top-1.5 -right-1.5 h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-xs"
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW (pb-24 untuk menyisakan ruang navigasi bawah pada HP) -->
+    <main
+      class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 pb-24 md:pb-8 z-10"
+    >
+      <!-- TAB 1: HOME CATALOGUE -->
+      <section id="tab-home" class="space-y-4 md:space-y-8">
+        <!-- HERO BANNER -->
+        <div
+          class="bento-card accent-gradient text-white p-6 md:p-14 relative overflow-hidden rounded-2xl md:rounded-3xl shadow-md border border-red-500/10"
+        >
+          <div
+            class="relative z-10 max-w-xl md:max-w-md lg:max-w-xl space-y-2 md:space-y-4"
+          >
+            <span
+              class="px-2.5 py-0.5 bg-white/20 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest inline-flex items-center gap-1"
+            >
+              ✨ IT Support & Premium Tech Kediri
+            </span>
+            <h1
+              class="font-display font-black text-xl sm:text-3xl md:text-5xl leading-tight"
+            >
+              Upgrade Performa Komputer Anda Sekarang!
+            </h1>
+            <p class="text-white/85 text-[10px] sm:text-sm leading-relaxed">
+              Aditya Computer menyediakan Laptop, Hardware, Jaringan, serta
+              layanan perbaikan & perakitan profesional di Kediri.
+            </p>
+          </div>
+
+          <!-- Logo Banner (Hanya muncul di Layar Lebar/Desktop) -->
+          <div
+            class="absolute right-12 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-64 h-64 bg-white rounded-full border border-white/20 shadow-2xl p-9 select-none hover:rotate-6 hover:scale-105 transition-all duration-500"
+          >
+            <img
+              src="img/Fix.jpg"
+              alt="Logo Aditya Computer"
+              class="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+
+        <!-- FILTER & SEARCH BAR -->
+        <div
+          class="bento-card p-4 md:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4 bg-white/95 backdrop-blur-xs"
+        >
+          <div class="relative flex-grow max-w-md">
+            <i
+              class="ri-search-line absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
+            <input
+              type="text"
+              id="search-input"
+              oninput="filterProducts()"
+              placeholder="Cari laptop, monitor, printer..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            />
+          </div>
+          <!-- Kategori bisa digeser ke samping di HP (Swipeable) -->
+          <div
+            class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
+            id="categories-list"
+          >
+            <button
+              onclick="filterCategory('Semua')"
+              id="cat-all"
+              class="category-btn active px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Semua
+            </button>
+            <button
+              onclick="filterCategory('Laptop')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Laptop
+            </button>
+            <button
+              onclick="filterCategory('PC dan Monitor')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              PC & Monitor
+            </button>
+            <button
+              onclick="filterCategory('Networking')"
+              class="category-btn px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-semibold whitespace-nowrap"
+            >
+              Networking
+            </button>
+          </div>
+        </div>
+
+        <!-- PRODUCT GRID (2 KOLOM DI MOBILE) -->
+        <div
+          id="product-grid"
+          class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
+        >
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+      </section>
+
+      <!-- TAB 2: ARTIKEL -->
+      <section id="tab-artikel" class="hidden space-y-6 md:space-y-8">
+        <div class="text-center max-w-xl mx-auto space-y-1">
+          <span
+            class="text-red-600 font-semibold text-xs uppercase tracking-widest"
+            >Artikel Edukasi</span
+          >
+          <h2
+            class="font-display font-medium text-xl sm:text-3xl text-slate-900"
+          >
+            Tips & Info Seputar Komputer
+          </h2>
+        </div>
+        <div
+          id="articles-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+      </section>
+
+      <!-- TAB 3: LOKASI TOKO -->
+      <section id="tab-lokasi" class="hidden space-y-6 md:space-y-8">
+        <div class="text-center max-w-xl mx-auto space-y-1">
+          <span
+            class="text-red-600 font-semibold text-xs uppercase tracking-widest"
+            >Kunjungi Toko</span
+          >
+          <h2
+            class="font-display font-medium text-xl sm:text-3xl text-slate-900"
+          >
+            Lokasi Fisik Toko
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-5xl mx-auto">
+          <div
+            class="lg:col-span-5 bg-white/95 backdrop-blur-xs p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4"
+          >
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 text-xl"
+            >
+              <i class="ri-map-pin-2-line"></i>
+            </div>
+            <div>
+              <h3
+                class="font-display font-bold text-base md:text-lg text-slate-900"
+              >
+                Aditya Computer
+              </h3>
+              <p
+                class="text-[11px] md:text-xs text-slate-500 leading-relaxed mt-1"
+              >
+                Jl. Raya Tawang No. 35 Kecamatan Wates Kabupaten Kediri, Jawa
+                Timur.
+              </p>
+            </div>
+            <div class="h-[1px] bg-slate-100"></div>
+            <div class="space-y-1 text-[11px] md:text-xs text-slate-600">
+              <p class="flex justify-between">
+                <span>Senin - Sabtu</span>
+                <span class="font-bold">09:00 - 20:00</span>
+              </p>
+              <p class="flex justify-between text-red-500">
+                <span>Minggu</span> <span class="font-bold">Tutup</span>
+              </p>
+            </div>
+            <a
+              href="https://maps.app.goo.gl/9hwJFWbcrn7YMsDT7"
+              target="_blank"
+              class="block w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs text-center transition-colors"
+            >
+              Buka di Google Maps
+            </a>
+          </div>
+          <div
+            class="lg:col-span-7 rounded-2xl overflow-hidden h-[250px] md:h-[300px] border border-slate-200 shadow-xs bg-white"
+          >
+            <iframe
+              src="https://maps.google.com/maps?q=Aditya%20Computer%20Jl.%20Raya%20Tawang%20No.%2035%20Wates%20Kediri&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              class="w-full h-full border-0"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: HUBUNGI KAMI -->
+      <section id="tab-kontak" class="hidden space-y-6 md:space-y-8">
+        <div class="text-center max-w-xl mx-auto space-y-1">
+          <span
+            class="text-red-600 font-semibold text-xs uppercase tracking-widest"
+            >Komunikasi Langsung</span
+          >
+          <h2
+            class="font-display font-medium text-xl sm:text-3xl text-slate-900"
+          >
+            Kontak Kami
+          </h2>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto"
+        >
+          <div class="space-y-4">
+            <div
+              class="bento-card p-5 md:p-6 space-y-4 bg-white/95 backdrop-blur-xs"
+            >
+              <h3 class="font-bold text-slate-800 text-xs md:text-sm">
+                Informasi Pembayaran & Kontak
+              </h3>
+              <div class="space-y-3 text-[11px] md:text-xs text-slate-600">
+                <p class="flex items-center gap-2">
+                  <i class="ri-whatsapp-line text-emerald-500 text-lg"></i>
+                  <strong>0812-9793-3936</strong>
+                </p>
+                <p class="flex items-center gap-2">
+                  <i class="ri-bank-card-line text-blue-500 text-lg"></i>
+                  <strong>Bank BRI: 320801046217539</strong>
+                  <span class="block text-[10px] text-slate-400"
+                    >(a/n Aditya Computer)</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bento-card p-5 md:p-6 space-y-4 bg-white/95 backdrop-blur-xs"
+          >
+            <h3 class="font-bold text-slate-800 text-xs md:text-sm">
+              Form Konsultasi Cepat
+            </h3>
+            <div class="space-y-3">
+              <input
+                type="text"
+                id="wa-name"
+                placeholder="Nama Lengkap"
+                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-red-500/20"
+              />
+              <select
+                id="wa-subject"
+                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-red-500/20 bg-white"
+              >
+                <option>Tanya stok laptop / aksesoris</option>
+                <option>Konsultasi perbaikan laptop rusak</option>
+                <option>Pengadaan PC Kantor / Sekolah</option>
+              </select>
+              <button
+                onclick="sendWA()"
+                class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <i class="ri-send-plane-fill"></i> Kirim WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER (DESKTOP ONLY - HP Menggunakan Navigasi Bawah) -->
+    <footer
+      class="hidden md:block bg-slate-900 text-white border-t border-slate-800 py-8 z-10"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2"
+      >
+        <p>
+          © 2026 Aditya Computer Kediri. Hak Cipta Dilindungi Undang-Undang.
+        </p>
+        <p class="text-slate-600">Desain By Tatang.</p>
+      </div>
+    </footer>
+
+    <!-- STICKY BOTTOM NAVIGATION BAR (KHUSUS TAMPILAN MOBILE/SMARTPHONE) -->
+    <div
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 h-16 flex items-center justify-around z-40 px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]"
+    >
+      <button
+        onclick="switchTab('home')"
+        id="mob-nav-home"
+        class="flex flex-col items-center justify-center text-red-600 font-bold flex-1 py-1 transition-colors"
+      >
+        <i class="ri-store-2-line text-xl"></i>
+        <span class="text-[10px] mt-0.5">Katalog</span>
+      </button>
+      <button
+        onclick="switchTab('artikel')"
+        id="mob-nav-artikel"
+        class="flex flex-col items-center justify-center text-slate-500 flex-1 py-1 transition-colors"
+      >
+        <i class="ri-article-line text-xl"></i>
+        <span class="text-[10px] mt-0.5">Artikel</span>
+      </button>
+      <button
+        onclick="switchTab('lokasi')"
+        id="mob-nav-lokasi"
+        class="flex flex-col items-center justify-center text-slate-500 flex-1 py-1 transition-colors"
+      >
+        <i class="ri-map-pin-line text-xl"></i>
+        <span class="text-[10px] mt-0.5">Lokasi</span>
+      </button>
+      <button
+        onclick="switchTab('kontak')"
+        id="mob-nav-kontak"
+        class="flex flex-col items-center justify-center text-slate-500 flex-1 py-1 transition-colors"
+      >
+        <i class="ri-contacts-line text-xl"></i>
+        <span class="text-[10px] mt-0.5">Kontak</span>
+      </button>
+    </div>
+
+    <!-- CART SIDE DRAWER -->
+    <div id="cart-drawer" class="hidden fixed inset-0 z-50">
+      <div
+        onclick="toggleCart(false)"
+        class="absolute inset-0 bg-black/50 backdrop-blur-xs"
+      ></div>
+      <div
+        class="absolute inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl flex flex-col h-full"
+      >
+        <div
+          class="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between"
+        >
+          <span class="font-display font-bold text-base md:text-lg"
+            >Keranjang Belanja</span
+          >
+          <button
+            onclick="toggleCart(false)"
+            class="text-slate-400 hover:text-slate-900 text-xl cursor-pointer"
+          >
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div
+          id="cart-items"
+          class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4"
+        >
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+        <div
+          id="cart-footer"
+          class="p-4 md:p-6 border-t border-slate-100 bg-slate-50 space-y-4 hidden"
+        >
+          <div
+            class="flex justify-between font-bold text-slate-900 text-sm md:text-base"
+          >
+            <span>Total Belanja:</span>
+            <span id="cart-total" class="text-red-600 text-base md:text-lg"
+              >Rp 0</span
+            >
+          </div>
+          <button
+            onclick="openCheckout()"
+            class="w-full py-2.5 md:py-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer"
+          >
+            Lanjut ke Form Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div
+      id="checkout-modal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <div
+        onclick="toggleCheckoutModal(false)"
+        class="absolute inset-0 bg-black/50"
+      ></div>
+      <div
+        class="bg-white rounded-2xl p-5 md:p-6 max-w-md w-full relative z-10 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
+      >
+        <h3 class="font-display font-bold text-base md:text-lg">
+          Form Alamat Pengiriman
+        </h3>
+        <div class="space-y-3">
+          <input
+            type="text"
+            id="order-name"
+            placeholder="Nama Lengkap Penerima"
+            class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs"
+          />
+          <input
+            type="text"
+            id="order-phone"
+            placeholder="No. WhatsApp Aktif"
+            class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs"
+          />
+          <textarea
+            id="order-address"
+            rows="3"
+            placeholder="Alamat Pengiriman Lengkap"
+            class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs leading-relaxed"
+          ></textarea>
+          <div
+            class="bg-slate-50 p-3 md:p-4 rounded-xl text-xs space-y-1 border border-slate-100"
+          >
+            <p class="font-bold text-slate-700">Ringkasan Total Pembayaran:</p>
+            <p
+              id="checkout-total-txt"
+              class="font-black text-red-600 text-sm md:text-base"
+            >
+              Rp 0
+            </p>
+          </div>
+          <button
+            onclick="submitOrder()"
+            class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer"
+          >
+            Pesan & Konfirmasi WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHTBOX IMAGE FULLSCREEN MODAL -->
+    <div
+      id="image-lightbox"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm"
+    >
+      <button
+        onclick="closeLightbox()"
+        class="absolute top-4 right-4 text-white hover:text-red-500 text-3xl hover:scale-110 transition-transform cursor-pointer"
+      >
+        <i class="ri-close-line"></i>
+      </button>
+      <img
+        id="lightbox-img"
+        src=""
+        alt="Fullscreen Image"
+        class="max-h-full max-w-full object-contain rounded-xl shadow-2xl scale-95 transition-transform duration-300"
+      />
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script src="products.js"></script>
+    <script>
+      let currentTab = "home";
+      let cart = [];
+
+      window.onload = () => {
+        renderProducts(PRODUCTS_DATA);
+        renderArticles();
+      };
+
+      // Navigasi Tab Universal (Mendukung Desktop & Mobile Bar)
+      function switchTab(tabName) {
+        // Sembunyikan halaman lama & nonaktifkan navigasi desktop lama
+        document.getElementById(`tab-${currentTab}`).classList.add("hidden");
+        document
+          .getElementById(`nav-${currentTab}`)
+          ?.classList.remove("text-red-600", "bg-red-50/50", "font-bold");
+
+        // Nonaktifkan navigasi mobile lama
+        const mobPrevBtn = document.getElementById(`mob-nav-${currentTab}`);
+        if (mobPrevBtn) {
+          mobPrevBtn.classList.remove("text-red-600", "font-bold");
+          mobPrevBtn.classList.add("text-slate-500");
+        }
+
+        // Tampilkan halaman baru & aktifkan navigasi desktop baru
+        document.getElementById(`tab-${tabName}`).classList.remove("hidden");
+        document
+          .getElementById(`nav-${tabName}`)
+          ?.classList.add("text-red-600", "bg-red-50/50", "font-bold");
+
+        // Aktifkan navigasi mobile baru
+        const mobNewBtn = document.getElementById(`mob-nav-${tabName}`);
+        if (mobNewBtn) {
+          mobNewBtn.classList.remove("text-slate-500");
+          mobNewBtn.classList.add("text-red-600", "font-bold");
+        }
+
+        currentTab = tabName;
+        window.scrollTo({ top: 0, behavior: "smooth" }); // Otomatis scroll ke atas dengan efek halus saat ganti tab
+      }
+
+      // Render Produk (Tampilan Grid responsif 2 kolom di HP)
+      function renderProducts(data) {
+        const grid = document.getElementById("product-grid");
+        grid.innerHTML = "";
+
+        if (data.length === 0) {
+          grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="ri-search-line text-4xl block mb-2"></i>
+                        <p class="text-sm font-semibold">Produk tidak ditemukan.</p>
+                    </div>`;
+          return;
+        }
+
+        data.forEach((prod) => {
+          // Opsi A: Tampilkan seluruh spesifikasi tanpa terpotong
+          const specBadges = prod.specs
+            .map(
+              (s) =>
+                `<span class="text-[9px] bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded-sm truncate max-w-[120px]">${s}</span>`,
+            )
+            .join("");
+          const outOfStock = prod.stock === 0;
+
+          const cardHtml = `
+                    <div class="bento-card flex flex-col justify-between h-full bg-white border border-slate-100 rounded-xl md:rounded-2xl overflow-hidden group shadow-xs">
+                        <!-- Kontainer Gambar (Perbaikan visual kelas bg-slate-100) -->
+                        <div class="relative h-32 md:h-48 bg-slate-100/60 flex items-center justify-center p-2 md:p-4">
+                            <img src="${prod.image}" alt="${prod.name}" 
+                                 onclick="openLightbox('${prod.image}')" 
+                                 class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 cursor-zoom-in" 
+                                 title="Klik untuk memperbesar">
+                            ${outOfStock ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="text-white text-[10px] md:text-xs font-bold px-2 py-1 bg-red-600 rounded">HABIS</span></div>` : ""}
+                        </div>
+                        <!-- Informasi Detail -->
+                        <div class="p-3 md:p-5 flex-grow flex flex-col justify-between gap-1.5 md:gap-3">
+                            <div class="space-y-1 md:space-y-2">
+                                <span class="text-[9px] md:text-[10px] text-red-600 font-bold tracking-wider uppercase">${prod.category}</span>
+                                <h3 class="font-display font-semibold text-xs md:text-base text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 md:line-clamp-1 h-8 md:h-auto">${prod.name}</h3>
+                                <p class="text-[11px] text-slate-500 line-clamp-2 hidden sm:block">${prod.description}</p>
+                                <div class="flex flex-wrap gap-1 h-10 md:h-auto overflow-hidden">${specBadges}</div>
+                            </div>
+                            <div class="pt-2 md:pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 md:gap-2">
+                                <span class="font-display font-bold text-red-700 text-xs sm:text-sm md:text-base">${formatRupiah(prod.price)}</span>
+                                <button onclick="addToCart('${prod.id}')" ${outOfStock ? "disabled" : ""} class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all cursor-pointer ${outOfStock ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700"}">
+                                    Beli
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+          grid.insertAdjacentHTML("beforeend", cardHtml);
+        });
+      }
+
+      function renderArticles() {
+        const grid = document.getElementById("articles-grid");
+        grid.innerHTML = "";
+        ARTICLES_DATA.forEach((art) => {
+          const cardHtml = `
+                    <div class="bg-white rounded-2xl border border-slate-150 overflow-hidden shadow-xs flex flex-col justify-between h-full">
+                        <div class="h-44 bg-slate-100 overflow-hidden"><img src="${art.image}" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-2 flex-grow flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <div class="text-[10px] text-slate-400 font-mono flex gap-2"><span>${art.date}</span>•<span>${art.readTime}</span></div>
+                                <h3 class="font-display font-bold text-slate-900 line-clamp-2">${art.title}</h3>
+                                <p class="text-xs text-slate-500 line-clamp-3">${art.excerpt}</p>
+                            </div>
+                            <!-- Perbaikan Bug String Escaping (Ganti ke readArticle) -->
+                            <button onclick="readArticle('${art.id}')" class="w-full mt-4 py-2 bg-slate-50 border border-slate-150 rounded-xl text-xs text-slate-700 font-bold hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer">Baca Selengkapnya</button>
+                        </div>
+                    </div>`;
+          grid.insertAdjacentHTML("beforeend", cardHtml);
+        });
+      }
+
+      // Pembaca Artikel Aman Bebas Bug Tanda Petik
+      function readArticle(artId) {
+        const art = ARTICLES_DATA.find((a) => a.id === artId);
+        if (art) {
+          alert(`${art.title}\n\n${art.content}`);
+        }
+      }
+
+      // Penyaring Kategori (Perbaikan Bug Scope Event di Browser Safari/iPhone)
+      let currentCategory = "Semua";
+      function filterCategory(cat) {
+        currentCategory = cat;
+
+        // Atur status aktif pada tombol
+        document.querySelectorAll(".category-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          // Otomatis deteksi elemen yang diklik secara stabil di semua browser
+          if (btn.getAttribute("onclick").includes(`'${cat}'`)) {
+            btn.classList.add("active");
+          }
+        });
+        filterProducts();
+      }
+
+      function filterProducts() {
+        const query = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        const filtered = PRODUCTS_DATA.filter((prod) => {
+          const matchCategory =
+            currentCategory === "Semua" || prod.category === currentCategory;
+          const matchSearch =
+            prod.name.toLowerCase().includes(query) ||
+            prod.brand.toLowerCase().includes(query);
+          return matchCategory && matchSearch;
+        });
+        renderProducts(filtered);
+      }
+
+      function formatRupiah(num) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0,
+        }).format(num);
+      }
+
+      function toggleCart(isOpen) {
+        document
+          .getElementById("cart-drawer")
+          .classList.toggle("hidden", !isOpen);
+        if (isOpen) renderCart();
+      }
+
+      function addToCart(prodId) {
+        const prod = PRODUCTS_DATA.find((p) => p.id === prodId);
+        const inCart = cart.find((item) => item.product.id === prodId);
+
+        if (inCart) {
+          if (inCart.quantity < prod.stock) {
+            inCart.quantity++;
+            alert(`Jumlah "${prod.name}" ditambah di keranjang.`);
+          } else {
+            alert("Stok barang di toko kami terbatas!");
+          }
+        } else {
+          cart.push({ product: prod, quantity: 1 });
+          alert(`"${prod.name}" berhasil masuk keranjang.`);
+        }
+        updateCartCounter();
+      }
+
+      function updateCartCounter() {
+        const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+        const counter = document.getElementById("cart-count");
+        if (totalItems > 0) {
+          counter.innerText = totalItems;
+          counter.classList.remove("hidden");
+          counter.classList.add("inline-flex");
+        } else {
+          counter.classList.add("hidden");
+        }
+      }
+
+      function renderCart() {
+        const container = document.getElementById("cart-items");
+        const footer = document.getElementById("cart-footer");
+        container.innerHTML = "";
+
+        if (cart.length === 0) {
+          container.innerHTML =
+            '<div class="py-12 text-center text-slate-400 text-xs">Keranjang belanja Anda masih kosong.</div>';
+          footer.classList.add("hidden");
+          return;
+        }
+
+        let grandTotal = 0;
+        cart.forEach((item) => {
+          const totalItemPrice = item.product.price * item.quantity;
+          grandTotal += totalItemPrice;
+
+          const itemHtml = `
+                    <div class="flex gap-4 p-3 border border-slate-100 bg-slate-50/50 rounded-xl">
+                        <img src="${item.product.image}" class="w-12 h-12 object-contain bg-white rounded border border-slate-100 p-1">
+                        <div class="flex-grow space-y-1 text-xs">
+                            <h4 class="font-bold text-slate-800 line-clamp-1">${item.product.name}</h4>
+                            <p class="font-semibold text-red-600">${formatRupiah(item.product.price)}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="changeQty('${item.product.id}', -1)" class="w-6 h-6 border bg-white rounded flex items-center justify-center">-</button>
+                                    <span class="font-bold">${item.quantity}</span>
+                                    <button onclick="changeQty('${item.product.id}', 1)" class="w-6 h-6 border bg-white rounded flex items-center justify-center">+</button>
+                                </div>
+                                <button onclick="removeFromCart('${item.product.id}')" class="text-rose-600 text-sm"><i class="ri-trash-line"></i></button>
+                            </div>
+                        </div>
+                    </div>`;
+          container.insertAdjacentHTML("beforeend", itemHtml);
+        });
+
+        document.getElementById("cart-total").innerText =
+          formatRupiah(grandTotal);
+        footer.classList.remove("hidden");
+      }
+
+      function changeQty(prodId, delta) {
+        const item = cart.find((it) => it.product.id === prodId);
+        const newQty = item.quantity + delta;
+
+        if (newQty <= 0) {
+          removeFromCart(prodId);
+        } else if (newQty > item.product.stock) {
+          alert("Mencapai batas stok toko!");
+        } else {
+          item.quantity = newQty;
+          renderCart();
+          updateCartCounter();
+        }
+      }
+
+      function removeFromCart(prodId) {
+        cart = cart.filter((it) => it.product.id !== prodId);
+        renderCart();
+        updateCartCounter();
+      }
+
+      function toggleCheckoutModal(isOpen) {
+        document
+          .getElementById("checkout-modal")
+          .classList.toggle("hidden", !isOpen);
+      }
+
+      function openCheckout() {
+        toggleCart(false);
+        const total = cart.reduce(
+          (acc, it) => acc + it.product.price * it.quantity,
+          0,
+        );
+        document.getElementById("checkout-total-txt").innerText =
+          formatRupiah(total);
+        toggleCheckoutModal(true);
+      }
+
+      function submitOrder() {
+        const name = document.getElementById("order-name").value.trim();
+        const phone = document.getElementById("order-phone").value.trim();
+        const address = document.getElementById("order-address").value.trim();
+
+        if (!name || !phone || !address) {
+          alert("Harap lengkapi semua data pengiriman!");
+          return;
+        }
+
+        let orderDetails = "";
+        let total = 0;
+        cart.forEach((it, idx) => {
+          const sub = it.product.price * it.quantity;
+          total += sub;
+          orderDetails += `${idx + 1}. ${it.product.name} (${it.quantity}x) - ${formatRupiah(sub)}\n`;
+        });
+
+        const waText =
+          `Halo Aditya Computer, saya ingin membeli produk berikut:\n\n` +
+          `📦 *Detail Belanja:*\n${orderDetails}\n` +
+          `💵 *Total Tagihan:* ${formatRupiah(total)}\n\n` +
+          `📍 *Detail Pengiriman:*\n` +
+          `- Nama: ${name}\n` +
+          `- HP/WA: ${phone}\n` +
+          `- Alamat: ${address}\n\n` +
+          `Mohon segera diproses pesanan saya. Terima kasih!`;
+
+        const link = `https://wa.me/6281297933936?text=${encodeURIComponent(waText)}`;
+        cart = [];
+        updateCartCounter();
+        toggleCheckoutModal(false);
+        window.open(link, "_blank");
+      }
+
+      function sendWA() {
+        const nama =
+          document.getElementById("wa-name").value.trim() || "Pelanggan";
+        const sub = document.getElementById("wa-subject").value;
+        const text = `Halo Aditya Computer, saya ${nama}. Ingin bertanya mengenai: "${sub}"`;
+        window.open(
+          `https://wa.me/6281297933936?text=${encodeURIComponent(text)}`,
+          "_blank",
+        );
+      }
+
+      function openLightbox(imgSrc) {
+        const lightbox = document.getElementById("image-lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.src = imgSrc;
+        lightbox.classList.remove("hidden");
+        setTimeout(() => {
+          lightboxImg.classList.remove("scale-95");
+          lightboxImg.classList.add("scale-100");
+        }, 50);
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("image-lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.classList.remove("scale-100");
+        lightboxImg.classList.add("scale-95");
+        lightbox.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+    </script>
+  </body>
+</html>
