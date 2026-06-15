@@ -12,6 +12,17 @@ const PRODUCTS_DATA = [
     specs: ["Pentium Silver N5030", "8GB DDR4 RAM", "256GB SSD", "Layar 14-inch HD"]
   },
   {
+    id: "laptop-02",
+    name: "HP-14s-cr0xxx",
+    brand: "HP",
+    category: "Laptop",
+    price: 3500000,
+    stock: 1,
+    description: "Laptop ringan dan ringkas untuk produktivitas harian, sekolah, dan kerja.",
+    image: "https://k-galaxy.com/product/hp-14s-cr0xxx-with-intel-celeron-n5030-and-8gb-ram-and-windows-11%20A.jpg",
+    specs: ["Pentium Silver N5030", "8GB DDR4 RAM", "256GB SSD", "Layar 14-inch HD"]
+  },
+  {
     id: "monitor-01",
     name: "Monitor Xiaomi A24i 2026",
     brand: "Xiaomi",
