@@ -24,9 +24,9 @@
   <body
     class="font-sans bg-slate-50 text-slate-900 min-h-screen flex flex-col relative select-none md:select-text"
   >
-    <!-- HEADER / NAVIGATION (DESKTOP ONLY) -->
+    <!-- HEADER / NAVIGATION (DESKTOP ONLY BLUR TO SAVE MOBILE PERFORMANCE) -->
     <header
-      class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs px-4 sm:px-6 lg:px-8"
+      class="sticky top-0 z-40 bg-white/98 md:bg-white/95 md:backdrop-blur-md border-b border-slate-200/80 shadow-xs px-4 sm:px-6 lg:px-8"
     >
       <div class="max-w-7xl mx-auto h-16 flex items-center justify-between">
         <!-- Logo & Brand -->
@@ -388,8 +388,9 @@
     </footer>
 
     <!-- STICKY BOTTOM NAVIGATION BAR -->
+    <!-- STICKY BOTTOM NAVIGATION BAR (AKSELERASI GPU KOKOH) -->
     <div
-      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 h-16 flex items-center justify-around z-40 px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]"
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/98 border-t border-slate-200 h-16 flex items-center justify-around z-40 px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] [transform:translate3d(0,0,0)] [will-change:transform]"
     >
       <button
         onclick="switchTab('home')"
