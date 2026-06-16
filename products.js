@@ -35,14 +35,14 @@ const PRODUCTS_DATA = [
   },
    {
     id: "printer-01",
-    name: "Printer Epson L3210",
+    name: "Printer Epson L120",
     brand: "Epson",
-    category: "Printer & Scanner", // 👈 Tulis persis seperti ini untuk kategori Printer & Scanner
-    price: 2400000,
+    category: "Printer & Scanner",
+    price: 850000,
     stock: 1, 
-    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
-    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
-    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
+    description: "Printer dengan kinerja handal!.",
+    image: "https://mediaserver.goepson.com/adaptivemedia/rendition?id=8fc5407ebe00c586c3c05da69aae7072b0a753c4&vid=8fc5407ebe00c586c3c05da69aae7072b0a753c4&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L120_550x310-min",
+    specs: ["Warna Akurat", "Compact", "Mudah melakukan Set Up"]
   },
   {
     id: "net-01",
@@ -57,14 +57,14 @@ const PRODUCTS_DATA = [
   },
   {
     id: "aksesoris-01",
-    name: "Mouse Logitech B100 USB",
-    brand: "Logitech",
-    category: "Aksesoris Lainnya", // 👈 Tulis persis seperti ini untuk kategori Aksesoris Lainnya
-    price: 65000,
+    name: "Fantech REVOLVER GP12",
+    brand: "Fantech",
+    category: "Aksesoris Lainnya", 
+    price: 195000,
     stock: 1, 
-    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
-    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
-    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
+    description: "Dapatkan presisi dan kontrol superior dalam setiap game dengan Fantech Revolver GP12",
+    image: "https://fantech.id/cdn/shop/files/GamingPadGP12.png?v=1748585565&width=713",
+    specs: ["Kontrol Akurat", "Sleek Design", "Play In Comfort"]
   }
 ];
 
