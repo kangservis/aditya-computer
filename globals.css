@@ -3,23 +3,29 @@
 body {
     font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent; /* Menghilangkan efek kedip biru saat tombol di-tap di HP */
+    min-height: 100vh;
+    min-height: 100dvh; /* Menggunakan Dynamic Viewport Height agar layout stabil saat toolbar HP menyusut */
 }
 
-/* WATERMARK LOGO LATAR BELAKANG */
+/* WATERMARK LOGO LATAR BELAKANG (Optimasi Akselerasi GPU 60fps) */
 body::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%; /* Menggunakan width/height 100% agar tidak terpengaruh resize toolbar browser */
     background-image: url('img/Fix.jpg');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: min(800px, 80vw); /* Ukuran responsif menyesuaikan layar */
-    opacity: 0.06; /* Dibuat 6% agar samar dan tidak mengganggu teks di HP */
+    background-size: min(800px, 80vw); 
+    opacity: 0.06; 
     z-index: -10; 
     pointer-events: none; 
+    
+    /* MEMAKSA BROWSER MENGGUNAKAN GPU CHIP UNTUK RENDER (ANTI-LAG) */
+    transform: translate3d(0, 0, 0); 
+    will-change: transform; 
 }
 
 .font-display {
@@ -28,7 +34,7 @@ body::before {
 
 /* Bento Card Style */
 .bento-card {
-    background: rgba(255, 255, 255, 0.96); /* Menjaga teks tetap terbaca di atas watermark */
+    background: rgba(255, 255, 255, 0.96); 
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 1rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
