@@ -35,7 +35,7 @@ const PRODUCTS_DATA = [
   },
   {
     id: "monitor-01",
-    name: "Monitor Xiaomi A24i 2026",
+    name: "Xiaomi A24i 2026",
     brand: "Xiaomi",
     category: "Monitor",
     price: 1200000,
@@ -44,7 +44,29 @@ const PRODUCTS_DATA = [
     image: "https://i02.appmifile.com/mi-com-product/fly-birds/xiaomi-monitor-a24i-2026/pc/5a67d1fbf6c4d379a20b5ef0864cef85.jpg?f=webp",
     specs: ["Full HD 1080p", "Refresh Rate 144Hz", "Panel IPS", "Bezel-less Design"]
   },
-   {
+    {
+    id: "monitor-02",
+    name: "Pixel P190VG4 19 Inch",
+    brand: "Pixel",
+    category: "Monitor",
+    price: 650000,
+    stock: 4,
+    description: "Monitor PC Compact dan Modern",
+    image: "https://down-id.img.susercontent.com/file/sg-11134201-7rd46-m6pdlywnoumkf0@resize_w450_nl.webp",
+    specs: ["HD 768p", "Sleek Design", "HDMI + VGA Port", "16:9 Aspect Ratio"]
+  },
+    {
+    id: "monitor-03",
+    name: "Pixel P240VG4 24 Inch",
+    brand: "Pixel",
+    category: "Monitor",
+    price: 975000,
+    stock: 1,
+    description: "Monitor PC bezel-less dengan warna akurat dan kenyamanan mata.",
+    image: "https://down-id.img.susercontent.com/file/id-11134207-7qukx-lk0wlqe30e4fd7.webp",
+    specs: ["Full HD 1080p", "Refresh Rate 75Hz", "Sleek Design", "HDMI + VGA Port", "16:9 Aspect Ratio"]
+  },
+  {
     id: "printer-01",
     name: "Printer Epson L120",
     brand: "Epson",
