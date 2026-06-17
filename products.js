@@ -12,6 +12,17 @@ const PRODUCTS_DATA = [
     specs: ["Pentium Silver N5030", "8GB DDR4 RAM", "256GB SSD", "Layar 14-inch HD"]
   },
   {
+    id: "laptop-02",
+    name: "Asus X441M",
+    brand: "Asus",
+    category: "Laptop",
+    price: 2200000,
+    stock: 1,
+    description: "Laptop ini ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online,",
+    image: "https://www.jmtech.id/blog/wp-content/uploads/2021/10/asus_asus-x441ba-ga602t-amd-a6-9220-4gb-1tb-radeon-r4-w10-silver-14inch_full03.jpg",
+    specs: ["Intel Celeron N4000", "4GB DDR4 RAM", "128GB SSD", "Layar 14-inch HD"]
+  },
+  {
     id: "pc-01",
     name: "AIO Intel Core i5 Office",
     brand: "Advan",
