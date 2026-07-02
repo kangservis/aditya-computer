@@ -18,9 +18,20 @@ const PRODUCTS_DATA = [
     category: "Laptop",
     price: 2200000,
     stock: 1,
-    description: "Laptop ini ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online,",
+    description: "Laptop ini ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online.",
     image: "https://www.jmtech.id/blog/wp-content/uploads/2021/10/asus_asus-x441ba-ga602t-amd-a6-9220-4gb-1tb-radeon-r4-w10-silver-14inch_full03.jpg",
     specs: ["Intel Celeron N4000", "4GB DDR4 RAM", "128GB SSD", "Layar 14-inch HD"]
+  },
+  {
+    id: "laptop-03",
+    name: "Thinkpad L540",
+    brand: "Lenovo",
+    category: "Laptop",
+    price: 2500000,
+    stock: 1,
+    description: "Daya tahan bodi sangat kuat, keyboard yang nyaman dengan TrackPoint, ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online.",
+    image: "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//97/MTA-53919024/lenovo_lenovo_thinkpad_l540_celeron_ram_4gb_ssd_128gb_full01_hle588od.jpg",
+    specs: ["Intel Core i5-4300m", "8GB DDR3L RAM", "128GB SSD", "Layar 15-inch FHD"]
   },
   {
     id: "pc-01",
