@@ -1,135 +1,63 @@
-// DATABASE PRODUK ADITYA COMPUTER
-const PRODUCTS_DATA = [
-  {
-    id: "laptop-01",
-    name: "HP-14s-cr0xxx",
-    brand: "HP",
-    category: "Laptop",
-    price: 3500000,
-    stock: 1,
-    description: "Laptop ringan dan ringkas untuk produktivitas harian, sekolah, dan kerja.",
-    image: "https://k-galaxy.com/product/hp-14s-cr0xxx-with-intel-celeron-n5030-and-8gb-ram-and-windows-11%20A.jpg",
-    specs: ["Pentium Silver N5030", "8GB DDR4 RAM", "256GB SSD", "Layar 14-inch HD"]
-  },
-  {
-    id: "laptop-02",
-    name: "Asus X441M",
-    brand: "Asus",
-    category: "Laptop",
-    price: 2200000,
-    stock: 1,
-    description: "Laptop ini ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online.",
-    image: "https://www.jmtech.id/blog/wp-content/uploads/2021/10/asus_asus-x441ba-ga602t-amd-a6-9220-4gb-1tb-radeon-r4-w10-silver-14inch_full03.jpg",
-    specs: ["Intel Celeron N4000", "4GB DDR4 RAM", "128GB SSD", "Layar 14-inch HD"]
-  },
-  {
-    id: "laptop-03",
-    name: "Thinkpad L540",
-    brand: "Lenovo",
-    category: "Laptop",
-    price: 2500000,
-    stock: 1,
-    description: "Daya tahan bodi sangat kuat, keyboard yang nyaman dengan TrackPoint, ideal untuk komputasi harian ringan seperti mengetik, browsing, dan belajar online.",
-    image: "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//97/MTA-53919024/lenovo_lenovo_thinkpad_l540_celeron_ram_4gb_ssd_128gb_full01_hle588od.jpg",
-    specs: ["Intel Core i5-4300m", "8GB DDR3L RAM", "128GB SSD", "Layar 15-inch FHD"]
-  },
-  {
-    id: "pc-01",
-    name: "AIO Intel Core i5 Office",
-    brand: "Advan",
-    category: "AIO dan PC", 
-    price: 4500000,
-    stock: 1, 
-    description: "Excellence With Style.",
-    image: "https://els.id/wp-content/uploads/2023/11/All-In-One-Advan.png",
-    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
-  },
-  {
-    id: "monitor-01",
-    name: "Xiaomi A24i 2026",
-    brand: "Xiaomi",
-    category: "Monitor",
-    price: 1200000,
-    stock: 1,
-    description: "Monitor PC bezel-less dengan warna akurat dan kenyamanan mata.",
-    image: "https://i02.appmifile.com/mi-com-product/fly-birds/xiaomi-monitor-a24i-2026/pc/5a67d1fbf6c4d379a20b5ef0864cef85.jpg?f=webp",
-    specs: ["Full HD 1080p", "Refresh Rate 144Hz", "Panel IPS", "Bezel-less Design"]
-  },
-    {
-    id: "monitor-02",
-    name: "Pixel P190VG4 19 Inch",
-    brand: "Pixel",
-    category: "Monitor",
-    price: 650000,
-    stock: 4,
-    description: "Monitor PC Compact dan Modern",
-    image: "https://down-id.img.susercontent.com/file/sg-11134201-7rd46-m6pdlywnoumkf0@resize_w450_nl.webp",
-    specs: ["HD 768p", "Sleek Design", "HDMI + VGA Port", "16:9 Aspect Ratio"]
-  },
-    {
-    id: "monitor-03",
-    name: "Pixel P240VG4 24 Inch",
-    brand: "Pixel",
-    category: "Monitor",
-    price: 975000,
-    stock: 1,
-    description: "Monitor PC bezel-less dengan warna akurat dan kenyamanan mata.",
-    image: "https://down-id.img.susercontent.com/file/id-11134207-7qukx-lk0wlqe30e4fd7.webp",
-    specs: ["Full HD 1080p", "Refresh Rate 75Hz", "Sleek Design", "HDMI + VGA Port", "16:9 Aspect Ratio"]
-  },
-  {
-    id: "printer-01",
-    name: "Printer Epson L120",
-    brand: "Epson",
-    category: "Printer & Scanner",
-    price: 850000,
-    stock: 1, 
-    description: "Printer dengan kinerja handal!.",
-    image: "https://mediaserver.goepson.com/adaptivemedia/rendition?id=8fc5407ebe00c586c3c05da69aae7072b0a753c4&vid=8fc5407ebe00c586c3c05da69aae7072b0a753c4&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L120_550x310-min",
-    specs: ["Warna Akurat", "Compact", "Mudah melakukan Set Up"]
-  },
-  {
-    id: "net-01",
-    name: "Router D-Link N300",
-    brand: "D-Link",
-    category: "Networking",
-    price: 165000,
-    stock: 1, 
-    description: "Router Wi-Fi D-Link N300 dengan jangkauan sinyal luas.",
-    image: "https://dlink.co.id/wp-content/uploads/2024/06/DIR-612_X1_Image-LSide_Left-600x600.png",
-    specs: ["Kecepatan dan Jangkauan yang tinggi", "Memiliki Fitur Keamanan", "Mudah melakukan Set Up"]
-  },
-  {
-    id: "aksesoris-01",
-    name: "Fantech REVOLVER GP12",
-    brand: "Fantech",
-    category: "Aksesoris Lainnya", 
-    price: 195000,
-    stock: 1, 
-    description: "Dapatkan presisi dan kontrol superior dalam setiap game dengan Fantech Revolver GP12",
-    image: "https://fantech.id/cdn/shop/files/GamingPadGP12.png?v=1748585565&width=713",
-    specs: ["Kontrol Akurat", "Sleek Design", "Play In Comfort"]
-  }
-];
+// File: products.js
+// KITA SEKARANG MENGGUNAKAN FIREBASE FIRESTORE UNTUK MENGAMBIL DATA
 
-// DATABASE ARTIKEL EDUKASI
-const ARTICLES_DATA = [
-  {
-    id: "art-01",
-    title: "Mengapa Harus Rutin Service Berkala Laptop?",
-    date: "15 Juni 2026",
-    readTime: "3 menit baca",
-    excerpt: "Banyak pengguna mengabaikan perawatan fisik laptop hingga terjadi overheat. Temukan pentingnya membersihkan kipas dan ganti thermal paste.",
-    content: "Laptop yang sering digunakan akan menumpuk debu pada sistem pendinginnya. Debu ini menghalangi sirkulasi udara, menyebabkan processor bekerja lebih panas (overheat), dan menurunkan performa laptop Anda secara drastis. Melakukan service berkala minimal 6 bulan sekali untuk membersihkan debu dan mengganti thermal paste akan memperpanjang umur laptop Anda hingga bertahun-tahun.",
-    image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500"
-  },
-  {
-    id: "art-02",
-    title: "Tips Memilih RAM yang Tepat untuk PC Gaming",
-    date: "10 Juni 2026",
-    readTime: "4 menit baca",
-    excerpt: "Jangan hanya melihat kapasitasnya saja. Kecepatan (Speed) dan fitur Dual-Channel sangat berpengaruh pada kestabilan FPS game Anda.",
-    content: "Saat merakit PC gaming, kapasitas 16GB saat ini telah menjadi standar minimum yang disarankan. Namun, pastikan Anda menggunakan konfigurasi Dual-Channel (2x8GB) alih-of Single-Channel (1x16GB) karena Dual-Channel membuka lebar jalur komunikasi data sehingga processor dapat bekerja maksimal tanpa hambatan bottleneck.",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500"
+// 1. Import library Firebase langsung dari CDN Google (sangat ringan)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// 2. PASTE-KAN FIREBASE CONFIG ANDA DI SINI (Gantikan isi di bawah ini dengan milik Anda dari Langkah 2)
+const firebaseConfig = {
+    apiKey: "AIzaSyAebVJbgflOX2uHY8epkSoi6eIVcFkpsq4",
+    authDomain: "aditya-computer-db.firebaseapp.com",
+    projectId: "aditya-computer-db",
+    storageBucket: "aditya-computer-db.firebasestorage.app",
+    messagingSenderId: "433328408123",
+    appId: "1:433328408123:web:879956669ccdcc9592be1e",
+    measurementId: "G-4PS0CSCMB8"
+  };
+
+
+// 3. Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 4. Kita buat variabel global kosong sementara
+window.PRODUCTS_DATA = [];
+window.ARTICLES_DATA = []; // Biarkan kosong dulu, nanti kita urus artikel
+
+// 5. Fungsi untuk mengambil data dari Firestore
+export async function fetchProductsFromFirebase() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    const tempProducts = [];
+    
+    querySnapshot.forEach((doc) => {
+      // Kita gabungkan ID dari Firestore dengan data produknya
+      tempProducts.push({ id: doc.id, ...doc.data() });
+    });
+
+    window.PRODUCTS_DATA = tempProducts;
+    return tempProducts;
+  } catch (error) {
+    console.error("Gagal mengambil data dari Firebase:", error);
+    return [];
   }
-];
+}
+
+// Tambahkan fungsi ini di bawah fetchProductsFromFirebase()
+export async function fetchArticlesFromFirebase() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "articles"));
+    const tempArticles = [];
+    
+    querySnapshot.forEach((doc) => {
+      tempArticles.push({ id: doc.id, ...doc.data() });
+    });
+
+    window.ARTICLES_DATA = tempArticles;
+    return tempArticles;
+  } catch (error) {
+    console.error("Gagal mengambil data artikel dari Firebase:", error);
+    return [];
+  }
+}

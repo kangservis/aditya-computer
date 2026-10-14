@@ -640,10 +640,11 @@
         onclick="closeArticleDetail()"
         class="absolute inset-0 cursor-pointer"
       ></div>
+      <!-- UBAH max-w-lg menjadi max-w-3xl 👇 -->
       <div
-        class="bg-white rounded-2xl p-5 sm:p-6 max-w-lg w-full relative z-10 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
+        class="bg-white rounded-2xl p-5 sm:p-6 max-w-3xl w-full relative z-10 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
       >
-        <!-- Header Modal -->
+        <!-- Header Modal (Biar tetap sama) -->
         <div
           class="flex items-center justify-between border-b border-slate-100 pb-3"
         >
@@ -660,8 +661,9 @@
           </button>
         </div>
         <!-- Cover Gambar Artikel -->
+        <!-- UBAH tinggi gambar agar proporsional dengan lebarnya (tambah sm:h-64 md:h-72) 👇 -->
         <div
-          class="h-44 sm:h-52 bg-slate-100 rounded-xl overflow-hidden border border-slate-100"
+          class="h-44 sm:h-64 md:h-72 bg-slate-100 rounded-xl overflow-hidden border border-slate-100"
         >
           <img
             id="article-detail-image"
@@ -729,15 +731,35 @@
     ></div>
 
     <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+      // 1. Import KEDUA fungsi dari products.js
+      import {
+        fetchProductsFromFirebase,
+        fetchArticlesFromFirebase,
+      } from "./products.js";
+
+      window.onload = async () => {
+        // Tampilkan pesan loading sementara
+        document.getElementById("product-grid").innerHTML =
+          '<p class="col-span-full text-center text-slate-500 py-10">Mengambil data produk...</p>';
+
+        // 2. Ambil data Produk dan Artikel secara BERSAMAAN (Lebih Cepat!)
+        await Promise.all([
+          fetchProductsFromFirebase(),
+          fetchArticlesFromFirebase(),
+        ]);
+
+        // 3. Render data yang didapat ke layar
+        renderProducts(window.PRODUCTS_DATA);
+        renderArticles(window.ARTICLES_DATA); // <-- Sekarang kita lempar datanya ke sini
+      };
+    </script>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script src="products.js"></script>
     <script>
       let currentTab = "home";
       let cart = [];
-
-      window.onload = () => {
-        renderProducts(PRODUCTS_DATA);
-        renderArticles();
-      };
 
       // Navigasi Tab Universal (Mendukung Desktop & Mobile Bar)
       function switchTab(tabName) {
@@ -829,13 +851,22 @@
         });
       }
 
-      function renderArticles() {
+      // Ubah fungsi renderArticles agar menerima parameter 'data'
+      function renderArticles(data = []) {
         const grid = document.getElementById("articles-grid");
         grid.innerHTML = "";
-        ARTICLES_DATA.forEach((art) => {
+
+        // Jika belum ada artikel di database
+        if (data.length === 0) {
+          grid.innerHTML =
+            '<p class="col-span-full text-center text-slate-500 py-10">Belum ada artikel edukasi saat ini.</p>';
+          return;
+        }
+
+        data.forEach((art) => {
           const cardHtml = `
                     <div class="bg-white rounded-2xl border border-slate-150 overflow-hidden shadow-xs flex flex-col justify-between h-full">
-                        <div class="h-44 bg-slate-100 overflow-hidden"><img src="${art.image}" class="w-full h-full object-cover"></div>
+                        <div class="h-44 bg-slate-100 overflow-hidden"><img src="${art.image}" class="w-full h-full object-cover" loading="lazy"></div>
                         <div class="p-5 space-y-2 flex-grow flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="text-[10px] text-slate-400 font-mono flex gap-2"><span>${art.date}</span>•<span>${art.readTime}</span></div>
@@ -851,7 +882,7 @@
 
       // Fungsi Membuka Pop-Up Detail Artikel (Menggantikan Browser Alert Kaku)
       function readArticle(artId) {
-        const art = ARTICLES_DATA.find((a) => a.id === artId);
+        const art = window.ARTICLES_DATA.find((a) => a.id === artId);
         if (!art) return;
 
         // Pasang data ke elemen modal artikel
