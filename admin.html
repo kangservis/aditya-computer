@@ -1003,18 +1003,17 @@
         renderTableProduk(filtered);
       };
 
-      // --- FITUR SORTING TABEL PRODUK ---
+     // --- FITUR SORTING TABEL PRODUK (KOREKSI ARAH PANAH) ---
       let currentSortColumn = "";
       let isAscending = true;
 
       window.sortProducts = (column) => {
-        // Balikkan arah jika kolom yang sama diklik (Atas-Bawah),
-        // Jika beda kolom, mulai dari awal (Ascending / A-Z / Terkecil)
+        // Jika kolom sama, balikkan arah. Jika beda, mulai dari Ascending
         if (currentSortColumn === column) {
           isAscending = !isAscending;
         } else {
           currentSortColumn = column;
-          isAscending = true;
+          isAscending = true; // Ascending (Panah Atas / A-Z / Terkecil ke Terbesar)
         }
 
         // 1. Reset warna dan bentuk semua ikon ke abu-abu netral
@@ -1025,9 +1024,10 @@
         // 2. Ubah ikon pada kolom yang sedang aktif menjadi merah
         const activeIcon = document.getElementById(`sort-icon-${column}`);
         if (activeIcon) {
+          // KOREKSI: isAscending = Panah Atas (Meningkat), !isAscending = Panah Bawah (Menurun)
           activeIcon.className = isAscending
-            ? "ri-arrow-down-s-fill sort-icon text-red-600 text-sm"
-            : "ri-arrow-up-s-fill sort-icon text-red-600 text-sm";
+            ? "ri-arrow-up-s-fill sort-icon text-red-600 text-sm"
+            : "ri-arrow-down-s-fill sort-icon text-red-600 text-sm";
         }
 
         // 3. Urutkan data berdasarkan kolom yang dipilih
@@ -1039,14 +1039,19 @@
           if (column === "price" || column === "stock") {
             valA = parseInt(valA) || 0;
             valB = parseInt(valB) || 0;
+            // KOREKSI LOGIKA MATEMATIKA:
+            // Ascending (Naik): valA - valB (Kecil di atas)
+            // Descending (Turun): valB - valA (Besar di atas)
             return isAscending ? valA - valB : valB - valA;
           }
           // Jika Produk atau Kategori, urutkan berdasarkan abjad teks
           else {
             valA = (valA || "").toString().toLowerCase();
             valB = (valB || "").toString().toLowerCase();
-            if (valA < valB) return isAscending ? -1 : 1;
-            if (valA > valB) return isAscending ? 1 : -1;
+            
+            // KOREKSI LOGIKA ABJAD:
+            if (valA < valB) return isAscending ? -1 : 1; // Ascending: A di atas
+            if (valA > valB) return isAscending ? 1 : -1; // Descending: Z di atas
             return 0;
           }
         });
