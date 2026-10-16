@@ -45,7 +45,8 @@
         </p>
       </div>
 
-      <form id="login-form" class="space-y-4">
+      <!-- Tambahkan autocomplete="off" pada form -->
+      <form id="login-form" class="space-y-4" autocomplete="off">
         <div class="space-y-1">
           <label
             class="text-[10px] font-bold text-slate-500 uppercase tracking-wider"
@@ -55,11 +56,13 @@
             <i
               class="ri-user-line absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             ></i>
+            <!-- Tambahkan autocomplete="off" pada input text -->
             <input
               type="text"
               id="username"
               required
               placeholder="Username"
+              autocomplete="off"
               class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none"
             />
           </div>
@@ -74,11 +77,13 @@
             <i
               class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             ></i>
+            <!-- Tambahkan autocomplete="new-password" khusus untuk input password agar browser tidak memaksakan riwayat sandi -->
             <input
               type="password"
               id="password"
               required
               placeholder="••••••••"
+              autocomplete="new-password"
               class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none"
             />
           </div>
@@ -640,6 +645,8 @@
         signInWithEmailAndPassword,
         onAuthStateChanged,
         signOut,
+        setPersistence, // Tambahan impor
+        browserSessionPersistence, // Tambahan impor
       } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
       import {
         getFirestore,
@@ -669,12 +676,12 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      let ALL_PRODUCTS = [];
-      let ALL_ARTICLES = [];
-      let currentAdminTab = "produk";
-
+      // --- DEKLARASI VARIABEL DOM & STATE (WAJIB AGAR TIDAK CRASH DI STRICT MODE) ---
       const loginContainer = document.getElementById("login-container");
       const dashboardContainer = document.getElementById("dashboard-container");
+      let currentAdminTab = "produk";
+      let ALL_PRODUCTS = [];
+      let ALL_ARTICLES = [];
 
       // --- FUNGSI UPLOAD KE IMGBB ---
       async function uploadImageToImgBB(file) {
@@ -796,6 +803,7 @@
         }
       });
 
+      // EVENT LOGIN FORM DENGAN PERSISTENSI SESI (TUTUP TAB = LOGOUT)
       document
         .getElementById("login-form")
         .addEventListener("submit", async (e) => {
@@ -815,7 +823,14 @@
           btnLogin.disabled = true;
 
           try {
+            // 1. Atur persistensi sesi TERLEBIH DAHULU
+            await setPersistence(auth, browserSessionPersistence);
+
+            // 2. Jika berhasil diatur, baru lakukan proses login
             await signInWithEmailAndPassword(auth, email, password);
+
+            // Note: Tidak perlu memanggil pushDashboardState() di sini karena
+            // onAuthStateChanged akan otomatis menangkap perubahan dan melakukannya.
           } catch (error) {
             errorMsg.innerText =
               error.code === "auth/invalid-credential"
