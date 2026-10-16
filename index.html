@@ -6,7 +6,32 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Aditya Computer | Toko Komputer Modern & Terpercaya</title>
+    <title>Aditya Computer Tawang Wates</title>
+
+   <!-- 1. SEO Meta Deskripsi Dasar (Muncul di pencarian Google) -->
+    <meta name="description" content="Aditya Computer adalah pusat penjualan laptop, PC, aksesoris, dan servis komputer terpercaya di Kediri. IT Solution Partner terbaik untuk kebutuhan Anda." />
+    <meta name="keywords" content="toko komputer kediri, beli laptop wates, servis laptop kediri, rakit pc kediri, aditya computer" />
+    <meta name="author" content="Aditya Computer" />
+
+    <!-- 2. Open Graph (Agar cantik saat link di-share ke WhatsApp / Facebook) -->
+    <meta property="og:title" content="Aditya Computer | Pusat Komputer Terlengkap Kediri" />
+    <meta property="og:description" content="Temukan laptop terbaru, layanan servis cepat, dan rakit PC profesional. Klik untuk melihat katalog kami!" />
+    <meta property="og:image" content="https://aditya-computer.pages.dev/img/Fix.jpg" />
+    <meta property="og:url" content="https://aditya-computer.pages.dev/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aditya Computer" />
+
+    <!-- 3. Twitter Card (Opsional, tapi bagus untuk standar SEO) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Aditya Computer | IT Solution Partner" />
+    <meta name="twitter:description" content="Pusat penjualan dan perbaikan komputer terbaik di Wates, Kediri." />
+    <meta name="twitter:image" content="https://aditya-computer.pages.dev/img/Fix.jpg" />
+
+    <!-- 4. Logo Bookmark -->
+    <link rel="icon" type="image/jpeg" href="img/Fix.jpg" />
+    <link rel="apple-touch-icon" href="img/Fix.jpg" />
+    <link rel="canonical" href="https://aditya-computer.pages.dev/" />
+
     <!-- Tailwind CSS v3 via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="globals.css" />
@@ -263,46 +288,41 @@
             Lokasi Fisik Toko
           </h2>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-5xl mx-auto">
-          <div
-            class="lg:col-span-5 bg-white/95 backdrop-blur-xs p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4"
-          >
-            <div
-              class="w-10 h-10 md:w-12 md:h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 text-xl"
-            >
-              <i class="ri-map-pin-2-line"></i>
+        <!-- KARTU LOKASI (TANPA IFRAME BERAT) -->
+        <div class="max-w-sm mx-auto bg-white/95 backdrop-blur-xs p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6 text-center">
+            <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 text-3xl mx-auto border border-red-100">
+              <i class="ri-map-pin-2-fill"></i>
             </div>
             <div>
-              <h3
-                class="font-display font-bold text-base md:text-lg text-slate-900"
-              >
+              <h3 class="font-display font-bold text-xl text-slate-900">
                 Aditya Computer
               </h3>
-              <p
-                class="text-[11px] md:text-xs text-slate-500 leading-relaxed mt-1"
-              >
-                Jl. Raya Tawang No. 35 Kecamatan Wates Kabupaten Kediri, Jawa
-                Timur.
+              <p class="text-[13px] text-slate-500 leading-relaxed mt-2 px-2">
+                Jl. Raya Tawang No. 35 Kecamatan Wates Kabupaten Kediri, Jawa Timur.
               </p>
             </div>
+            
             <div class="h-[1px] bg-slate-100"></div>
-            <div class="space-y-1 text-[11px] md:text-xs text-slate-600">
-              <p class="flex justify-between">
+            
+            <div class="space-y-2 text-[13px] text-slate-600">
+              <p class="flex justify-between items-center px-2">
                 <span>Senin - Sabtu</span>
-                <span class="font-bold">09:00 - 20:00</span>
+                <span class="font-bold text-slate-900">09:00 - 20:00</span>
               </p>
-              <p class="flex justify-between text-red-500">
-                <span>Minggu</span> <span class="font-bold">Tutup</span>
+              <p class="flex justify-between items-center px-2 text-red-500">
+                <span>Minggu</span> 
+                <span class="font-bold">Tutup</span>
               </p>
             </div>
+            
             <a
               href="https://maps.app.goo.gl/9hwJFWbcrn7YMsDT7"
               target="_blank"
-              class="block w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs text-center transition-colors"
+              class="block w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm text-center transition-all shadow-md shadow-red-500/20 cursor-pointer"
             >
-              Buka di Google Maps
+              <i class="ri-direction-line mr-1"></i> Buka di Google Maps
             </a>
-          </div>
+        </div>
           <div
             class="lg:col-span-7 rounded-2xl overflow-hidden h-[250px] md:h-[300px] border border-slate-200 shadow-xs bg-white"
           >
@@ -744,28 +764,70 @@
       class="fixed top-4 left-1/2 -translate-x-1/2 md:left-auto md:right-4 md:translate-x-0 z-50 flex flex-col gap-2 max-w-[90vw] sm:max-w-sm w-full pointer-events-none px-4 md:px-0"
     ></div>
 
+<!-- 5. JSON-LD Skema Local Business (Fokus SEO Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ComputerStore",
+      "name": "Aditya Computer",
+      "image": "https://aditya-computer.pages.dev/img/Fix.jpg",
+      "@id": "https://aditya-computer.pages.dev/",
+      "url": "https://aditya-computer.pages.dev/",
+      "telephone": "+6281297933936",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jl. Raya Tawang No. 35",
+        "addressLocality": "Wates",
+        "addressRegion": "Jawa Timur",
+        "postalCode": "64294",
+        "addressCountry": "ID"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -7.9015,
+        "longitude": 112.1465
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "09:00",
+          "closes": "20:00"
+        }
+      ],
+      "priceRange": "$$",
+      "description": "Pusat penjualan laptop, PC, aksesoris, dan servis komputer terpercaya di Kediri."
+    }
+    </script>
+
     <!-- JAVASCRIPT LOGIC -->
     <script type="module">
-      // 1. Import KEDUA fungsi dari products.js
       import {
         fetchProductsFromFirebase,
         fetchArticlesFromFirebase,
       } from "./products.js";
 
-      window.onload = async () => {
-        // Tampilkan pesan loading sementara
+      window.onload = () => {
+        // Tampilkan animasi loading yang lebih rapi
         document.getElementById("product-grid").innerHTML =
-          '<p class="col-span-full text-center text-slate-500 py-10">Mengambil data produk...</p>';
+          '<div class="col-span-full py-16 flex flex-col items-center justify-center text-slate-400"><i class="ri-loader-4-line animate-spin text-3xl mb-3 text-red-500"></i><p class="text-xs font-semibold tracking-wider uppercase">Memuat Katalog Produk...</p></div>';
 
-        // 2. Ambil data Produk dan Artikel secara BERSAMAAN (Lebih Cepat!)
-        await Promise.all([
-          fetchProductsFromFirebase(),
-          fetchArticlesFromFirebase(),
-        ]);
+        // 1. Ambil & Render Produk SECEPATNYA (Prioritas Utama)
+        fetchProductsFromFirebase().then(() => {
+          renderProducts(window.PRODUCTS_DATA);
+        });
 
-        // 3. Render data yang didapat ke layar
-        renderProducts(window.PRODUCTS_DATA);
-        renderArticles(window.ARTICLES_DATA); // <-- Sekarang kita lempar datanya ke sini
+        // 2. Ambil & Render Artikel DI LATAR BELAKANG (Tidak menghalangi loading produk)
+        fetchArticlesFromFirebase().then(() => {
+          renderArticles(window.ARTICLES_DATA);
+        });
       };
     </script>
 
@@ -1224,7 +1286,7 @@
         specsContainer.innerHTML = prod.specs
           .map(
             (s) =>
-              `<span class="text-[10px] bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-mono">${s}</span>`,
+              `<span class="text-[14px] bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-mono">${s}</span>`,
           )
           .join("");
 
