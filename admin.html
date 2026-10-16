@@ -166,18 +166,84 @@
 
       <!-- TAB KONTEN: PRODUK -->
       <div id="content-produk" class="bento-card overflow-hidden bg-white/95">
+        <!-- SEARCH BAR ADMIN (BARU) -->
+        <div class="p-4 border-b border-slate-100 bg-white flex justify-end">
+          <div class="relative w-full md:w-1/3 shrink-0">
+            <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input
+              type="text"
+              id="admin-search-product"
+              oninput="searchAdminProducts()"
+              placeholder="Cari nama, brand, atau kategori..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table
+            class="w-full min-w-[700px] text-left text-xs whitespace-nowrap"
+          >
         <div class="overflow-x-auto">
           <table
             class="w-full min-w-[700px] text-left text-xs whitespace-nowrap"
           >
             <thead
-              class="bg-slate-50 text-slate-500 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200"
+              class="bg-slate-50 text-slate-500 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200 select-none"
             >
               <tr>
-                <th class="px-4 py-3">Produk</th>
-                <th class="px-4 py-3">Kategori & Brand</th>
-                <th class="px-4 py-3">Harga</th>
-                <th class="px-4 py-3 text-center">Stok</th>
+                <!-- Kolom Produk (A-Z) -->
+                <th
+                  class="px-4 py-3 cursor-pointer hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  onclick="sortProducts('name')"
+                >
+                  <div class="flex items-center gap-1">
+                    Produk
+                    <i
+                      id="sort-icon-name"
+                      class="ri-arrow-up-down-line sort-icon text-slate-400"
+                    ></i>
+                  </div>
+                </th>
+                <!-- Kolom Kategori (A-Z) -->
+                <th
+                  class="px-4 py-3 cursor-pointer hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  onclick="sortProducts('category')"
+                >
+                  <div class="flex items-center gap-1">
+                    Kategori & Brand
+                    <i
+                      id="sort-icon-category"
+                      class="ri-arrow-up-down-line sort-icon text-slate-400"
+                    ></i>
+                  </div>
+                </th>
+                <!-- Kolom Harga (Angka) -->
+                <th
+                  class="px-4 py-3 cursor-pointer hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  onclick="sortProducts('price')"
+                >
+                  <div class="flex items-center gap-1">
+                    Harga
+                    <i
+                      id="sort-icon-price"
+                      class="ri-arrow-up-down-line sort-icon text-slate-400"
+                    ></i>
+                  </div>
+                </th>
+                <!-- Kolom Stok (Angka) -->
+                <th
+                  class="px-4 py-3 cursor-pointer hover:bg-slate-100 hover:text-slate-700 transition-colors text-center"
+                  onclick="sortProducts('stock')"
+                >
+                  <div class="flex items-center justify-center gap-1">
+                    Stok
+                    <i
+                      id="sort-icon-stock"
+                      class="ri-arrow-up-down-line sort-icon text-slate-400"
+                    ></i>
+                  </div>
+                </th>
                 <th class="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
@@ -892,15 +958,18 @@
         }
       }
 
-      function renderTableProduk() {
+      // Fungsi Render Tabel (Kini bisa menerima data hasil pencarian/sorting)
+      function renderTableProduk(dataToRender = ALL_PRODUCTS) {
         const tbody = document.getElementById("product-table-body");
         tbody.innerHTML = "";
-        if (ALL_PRODUCTS.length === 0) {
+        
+        if (dataToRender.length === 0) {
           tbody.innerHTML =
-            '<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">Belum ada produk.</td></tr>';
+            '<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">Produk tidak ditemukan.</td></tr>';
           return;
         }
-        ALL_PRODUCTS.forEach((prod) => {
+        
+        dataToRender.forEach((prod) => {
           tbody.innerHTML += `
             <tr class="hover:bg-slate-50 transition-colors">
                 <td class="px-4 py-3 flex items-center gap-3"><img src="${prod.image}" class="w-10 h-10 object-cover rounded border border-slate-200 bg-white"><div class="max-w-[150px] sm:max-w-xs"><p class="font-bold text-slate-800 truncate">${prod.name}</p><p class="text-[9px] text-slate-400 truncate">${prod.description}</p></div></td>
@@ -917,6 +986,74 @@
             </tr>`;
         });
       }
+
+      // --- FITUR PENCARIAN ADMIN ---
+      window.searchAdminProducts = () => {
+        const query = document.getElementById("admin-search-product").value.toLowerCase();
+        
+        const filtered = ALL_PRODUCTS.filter((prod) => {
+          const nameMatch = (prod.name || "").toLowerCase().includes(query);
+          const brandMatch = (prod.brand || "").toLowerCase().includes(query);
+          const catMatch = (prod.category || "").toLowerCase().includes(query);
+          
+          return nameMatch || brandMatch || catMatch;
+        });
+        
+        // Panggil fungsi render ulang dengan data yang sudah disaring
+        renderTableProduk(filtered);
+      };
+
+      // --- FITUR SORTING TABEL PRODUK ---
+      let currentSortColumn = "";
+      let isAscending = true;
+
+      window.sortProducts = (column) => {
+        // Balikkan arah jika kolom yang sama diklik (Atas-Bawah),
+        // Jika beda kolom, mulai dari awal (Ascending / A-Z / Terkecil)
+        if (currentSortColumn === column) {
+          isAscending = !isAscending;
+        } else {
+          currentSortColumn = column;
+          isAscending = true;
+        }
+
+        // 1. Reset warna dan bentuk semua ikon ke abu-abu netral
+        document.querySelectorAll(".sort-icon").forEach((icon) => {
+          icon.className = "ri-arrow-up-down-line sort-icon text-slate-400";
+        });
+
+        // 2. Ubah ikon pada kolom yang sedang aktif menjadi merah
+        const activeIcon = document.getElementById(`sort-icon-${column}`);
+        if (activeIcon) {
+          activeIcon.className = isAscending
+            ? "ri-arrow-down-s-fill sort-icon text-red-600 text-sm"
+            : "ri-arrow-up-s-fill sort-icon text-red-600 text-sm";
+        }
+
+        // 3. Urutkan data berdasarkan kolom yang dipilih
+        ALL_PRODUCTS.sort((a, b) => {
+          let valA = a[column];
+          let valB = b[column];
+
+          // Jika kolom Harga atau Stok, urutkan murni berdasarkan angka
+          if (column === "price" || column === "stock") {
+            valA = parseInt(valA) || 0;
+            valB = parseInt(valB) || 0;
+            return isAscending ? valA - valB : valB - valA;
+          }
+          // Jika Produk atau Kategori, urutkan berdasarkan abjad teks
+          else {
+            valA = (valA || "").toString().toLowerCase();
+            valB = (valB || "").toString().toLowerCase();
+            if (valA < valB) return isAscending ? -1 : 1;
+            if (valA > valB) return isAscending ? 1 : -1;
+            return 0;
+          }
+        });
+
+        // 4. Gambar ulang tabel dengan data yang sudah diurutkan
+        renderTableProduk();
+      };
 
       // ⚠️ EVENT SUBMIT PRODUK (DENGAN IMGBB)
       document
