@@ -749,6 +749,13 @@
       let ALL_PRODUCTS = [];
       let ALL_ARTICLES = [];
 
+      // --- FUNGSI IMAGE PROXY (ANTI BLOKIR ISP) ---
+      window.getProxyUrl = (url) => {
+        if (!url) return '';
+        if (url.startsWith('img/') || !url.startsWith('http') || url.includes('wsrv.nl')) return url;
+        return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+      };
+
       // --- FUNGSI UPLOAD KE IMGBB ---
       async function uploadImageToImgBB(file) {
         const formData = new FormData();
@@ -797,7 +804,7 @@
         const imgElement = document.getElementById(imgId);
         const textElement = document.getElementById(textId);
         if (url) {
-          imgElement.src = url;
+          imgElement.src = window.getProxyUrl(url); // Gunakan proxy di sini
           imgElement.classList.remove("hidden");
           textElement.classList.add("hidden");
         } else {
@@ -970,9 +977,10 @@
         }
         
         dataToRender.forEach((prod) => {
+          const proxiedImg = window.getProxyUrl(prod.image);
           tbody.innerHTML += `
             <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-4 py-3 flex items-center gap-3"><img src="${prod.image}" class="w-10 h-10 object-cover rounded border border-slate-200 bg-white"><div class="max-w-[150px] sm:max-w-xs"><p class="font-bold text-slate-800 truncate">${prod.name}</p><p class="text-[9px] text-slate-400 truncate">${prod.description}</p></div></td>
+                <td class="px-4 py-3 flex items-center gap-3"><img src="${proxiedImg}" class="w-10 h-10 object-cover rounded border border-slate-200 bg-white"><div class="max-w-[150px] sm:max-w-xs"><p class="font-bold text-slate-800 truncate">${prod.name}</p><p class="text-[9px] text-slate-400 truncate">${prod.description}</p></div></td>
                 <td class="px-4 py-3">
                     <div class="flex flex-col items-start gap-1">
                         <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-bold">${prod.category}</span>
@@ -1195,9 +1203,10 @@
           return;
         }
         ALL_ARTICLES.forEach((art) => {
+          const proxiedImg = window.getProxyUrl(art.image);
           tbody.innerHTML += `
             <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-4 py-3 flex items-center gap-3"><img src="${art.image}" class="w-10 h-10 object-cover rounded border border-slate-200 bg-white"><div class="max-w-[150px] sm:max-w-xs"><p class="font-bold text-slate-800 truncate">${art.title}</p><p class="text-[9px] text-slate-400 truncate">${art.excerpt}</p></div></td>
+                <td class="px-4 py-3 flex items-center gap-3"><img src="${proxiedImg}" class="w-10 h-10 object-cover rounded border border-slate-200 bg-white"><div class="max-w-[150px] sm:max-w-xs"><p class="font-bold text-slate-800 truncate">${art.title}</p><p class="text-[9px] text-slate-400 truncate">${art.excerpt}</p></div></td>
                 <td class="px-4 py-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-bold">${art.readTime}</span></td>
                 <td class="px-4 py-3 font-mono text-slate-500 text-[10px]">${art.date}</td>
                 <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-1"><button onclick="editArticle('${art.id}')" class="w-7 h-7 rounded bg-blue-50 text-blue-600 cursor-pointer"><i class="ri-edit-line"></i></button><button onclick="deleteData('${art.id}', 'articles')" class="w-7 h-7 rounded bg-red-50 text-red-600 cursor-pointer"><i class="ri-delete-bin-line"></i></button></div></td>
