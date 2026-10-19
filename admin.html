@@ -902,6 +902,9 @@
             // 2. Jika berhasil diatur, baru lakukan proses login
             await signInWithEmailAndPassword(auth, email, password);
 
+            // 3. KOSONGKAN FORM OTOMATIS SETELAH BERHASIL LOGIN
+            document.getElementById("login-form").reset();
+
             // Note: Tidak perlu memanggil pushDashboardState() di sini karena
             // onAuthStateChanged akan otomatis menangkap perubahan dan melakukannya.
           } catch (error) {
