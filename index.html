@@ -997,12 +997,11 @@
         });
       }
 
-      // Ubah fungsi renderArticles agar menerima parameter 'data'
+      // 1. DIBENAHI: Render Card Artikel dengan Padding & Layout Bento yang Rapi
       function renderArticles(data = []) {
         const grid = document.getElementById("articles-grid");
         grid.innerHTML = "";
 
-        // Jika belum ada artikel di database
         if (data.length === 0) {
           grid.innerHTML =
             '<p class="col-span-full text-center text-slate-500 py-10">Belum ada artikel edukasi saat ini.</p>';
@@ -1012,26 +1011,33 @@
         data.forEach((art) => {
           const proxiedImg = getProxyUrl(art.image);
           const cardHtml = `
-                    <div class="bg-white rounded-2xl border border-slate-150 overflow-hidden shadow-xs flex flex-col justify-between h-full">
-                        <div class="h-44 bg-slate-100/60 flex items-center justify-center p-3 border-b border-slate-100"><img src="${proxiedImg}" class="max-h-full max-w-full object-contain" loading="lazy"></div>
+                    <div class="bento-card bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-xs flex flex-col justify-between h-full group">
+                        <div class="h-44 bg-slate-100/60 flex items-center justify-center p-3 border-b border-slate-100">
+                            <img src="${proxiedImg}" alt="${art.title}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                        </div>
+                        <!-- Ditambahkan padding p-4 md:p-5 agar tidak mepet -->
+                        <div class="p-4 md:p-5 flex-grow flex flex-col justify-between space-y-3">
                             <div class="space-y-2">
-                                <div class="text-[10px] text-slate-400 font-mono flex gap-2"><span>${art.date}</span>•<span>${art.readTime}</span></div>
-                                <h3 class="font-display font-bold text-slate-900 line-clamp-2">${art.title}</h3>
-                                <p class="text-xs text-slate-500 line-clamp-3">${art.excerpt}</p>
+                                <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+                                    <span>${art.date}</span>
+                                    <span>•</span>
+                                    <span class="text-red-600 font-semibold">${art.readTime}</span>
+                                </div>
+                                <h3 class="font-display font-bold text-sm md:text-base text-slate-900 line-clamp-2 group-hover:text-red-600 transition-colors">${art.title}</h3>
+                                <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed">${art.excerpt}</p>
                             </div>
-                            <button onclick="readArticle('${art.id}')" class="w-full mt-4 py-2 bg-slate-50 border border-slate-150 rounded-xl text-xs text-slate-700 font-bold hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer">Baca Selengkapnya</button>
+                            <button onclick="readArticle('${art.id}')" class="w-full mt-2 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all cursor-pointer">Baca Selengkapnya</button>
                         </div>
                     </div>`;
           grid.insertAdjacentHTML("beforeend", cardHtml);
         });
       }
 
-      // Fungsi Membuka Pop-Up Detail Artikel (Menggantikan Browser Alert Kaku)
+      // 2. DIBENAHI: Buka Artikel + Push State ke Browser History
       function readArticle(artId) {
         const art = window.ARTICLES_DATA.find((a) => a.id === artId);
         if (!art) return;
 
-        // Pasang data ke elemen modal artikel
         document.getElementById("article-detail-date").innerText = art.date;
         document.getElementById("article-detail-image").src = getProxyUrl(art.image);
         document.getElementById("article-detail-image").alt = art.title;
@@ -1041,18 +1047,38 @@
         document.getElementById("article-detail-content").innerText =
           art.content;
 
-        // Tampilkan modal artikel
         document
           .getElementById("article-detail-modal")
           .classList.remove("hidden");
-        document.body.style.overflow = "hidden"; // Kunci scroll layar utama
+        document.body.style.overflow = "hidden";
+
+        // Tambahkan state ke history browser agar gestur back Android ditangkap oleh web
+        if (history.state?.modal !== "articleDetail") {
+          history.pushState({ modal: "articleDetail" }, "");
+        }
       }
 
-      // Fungsi Menutup Pop-Up Detail Artikel
-      function closeArticleDetail() {
-        document.getElementById("article-detail-modal").classList.add("hidden");
-        document.body.style.overflow = ""; // Aktifkan kembali scroll layar
+      // 3. DIBENAHI: Menutup Artikel & Menyelaraskan History Browser
+      function closeArticleDetail(fromPopState = false) {
+        const modal = document.getElementById("article-detail-modal");
+        if (modal.classList.contains("hidden")) return;
+
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+
+        // Jika ditutup lewat tombol (bukan gestur back), kembalikan posisi history browser
+        if (!fromPopState && history.state?.modal === "articleDetail") {
+          history.back();
+        }
       }
+
+      // 4. DITAMBAHKAN: Event listener khusus gestur tombol back Android / browser
+      window.addEventListener("popstate", (event) => {
+        const articleModal = document.getElementById("article-detail-modal");
+        if (articleModal && !articleModal.classList.contains("hidden")) {
+          closeArticleDetail(true);
+        }
+      });
 
      // Penyaring Kategori & Kondisi
       let currentCategory = "Semua";
