@@ -685,17 +685,17 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      // 1. OPTIMASI: Kita ambil app dan db langsung dari products.js
+      import { app, db } from "./products.js";
       import {
         getAuth,
         signInWithEmailAndPassword,
         onAuthStateChanged,
         signOut,
-        setPersistence, // Tambahan impor
-        browserSessionPersistence, // Tambahan impor
+        setPersistence,
+        browserSessionPersistence,
       } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
       import {
-        getFirestore,
         collection,
         getDocs,
         addDoc,
@@ -704,23 +704,11 @@
         deleteDoc,
       } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-      // ⚠️ 1. PASTE FIREBASE CONFIG ANDA DI SINI
-      const firebaseConfig = {
-        apiKey: "AIzaSyAebVJbgflOX2uHY8epkSoi6eIVcFkpsq4",
-        authDomain: "aditya-computer-db.firebaseapp.com",
-        projectId: "aditya-computer-db",
-        storageBucket: "aditya-computer-db.firebasestorage.app",
-        messagingSenderId: "433328408123",
-        appId: "1:433328408123:web:879956669ccdcc9592be1e",
-        measurementId: "G-4PS0CSCMB8",
-      };
-
-      // ⚠️ 2. PASTE API KEY IMGBB ANDA DI SINI (Contoh: "8f3b2a...")
+      // ⚠️ 2. PASTE API KEY IMGBB ANDA DI SINI
       const IMGBB_API_KEY = "5a2c77a01fcdb80b63e3cbd361218469";
 
-      const app = initializeApp(firebaseConfig);
+      // 3. Inisialisasi Auth saja (app dan db sudah disuplai dari products.js)
       const auth = getAuth(app);
-      const db = getFirestore(app);
 
       // --- DEKLARASI VARIABEL DOM & STATE (WAJIB AGAR TIDAK CRASH DI STRICT MODE) ---
       const loginContainer = document.getElementById("login-container");
@@ -728,13 +716,6 @@
       let currentAdminTab = "produk";
       let ALL_PRODUCTS = [];
       let ALL_ARTICLES = [];
-
-      // --- FUNGSI IMAGE PROXY (ANTI BLOKIR ISP) ---
-      window.getProxyUrl = (url) => {
-        if (!url) return '';
-        if (url.startsWith('img/') || !url.startsWith('http') || url.includes('wsrv.nl')) return url;
-        return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
-      };
 
       // --- FUNGSI UPLOAD KE IMGBB ---
       async function uploadImageToImgBB(file) {
@@ -1405,29 +1386,6 @@
             window.closeConfirmModal();
           }
         });
-
-      // --- NOTIFIKASI ---
-      window.showNotification = (message, type = "success") => {
-        const container = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        let iconClass = "ri-checkbox-circle-fill text-emerald-500";
-        let borderClass = "border-slate-100";
-        if (type === "warning" || type === "error") {
-          iconClass = "ri-error-warning-fill text-red-500";
-          borderClass = "border-red-150";
-        }
-        toast.className = `bento-card p-4 flex items-center gap-3 bg-white shadow-xl border pointer-events-auto w-full transition-all duration-300 translate-y-2 opacity-0 ${borderClass}`;
-        toast.innerHTML = `<i class="${iconClass} text-xl shrink-0"></i><p class="text-xs font-semibold text-slate-800 flex-grow leading-tight">${message}</p><button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-900 text-lg cursor-pointer"><i class="ri-close-line"></i></button>`;
-        container.appendChild(toast);
-        setTimeout(
-          () => toast.classList.remove("translate-y-2", "opacity-0"),
-          10,
-        );
-        setTimeout(() => {
-          toast.classList.add("translate-y-2", "opacity-0");
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      };
     </script>
   </body>
 </html>

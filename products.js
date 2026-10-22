@@ -17,9 +17,9 @@ const firebaseConfig = {
   };
 
 
-// 3. Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// 3. Inisialisasi Firebase (diexport agar bisa dipakai oleh admin.html)
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
 
 // 4. Kita buat variabel global kosong sementara
 window.PRODUCTS_DATA = [];
@@ -61,3 +61,43 @@ export async function fetchArticlesFromFirebase() {
     return [];
   }
 }
+
+// --- UTILITAS GLOBAL (Bisa dipakai oleh index.html & admin.html) ---
+
+// 1. Fungsi Image Proxy (Anti blokir gambar)
+window.getProxyUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('img/') || !url.startsWith('http') || url.includes('wsrv.nl')) return url;
+  return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+};
+
+// 2. Fungsi Toast Notification (Notifikasi Pop-up)
+window.showNotification = (message, type = "success") => {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  
+  const toast = document.createElement("div");
+  let iconClass = "ri-checkbox-circle-fill text-emerald-500";
+  let borderClass = "border-slate-100";
+
+  if (type === "warning" || type === "error") {
+    iconClass = "ri-error-warning-fill text-red-500";
+    borderClass = "border-red-150";
+  }
+
+  toast.className =
+    "bento-card p-4 flex items-center gap-3 bg-white shadow-xl border pointer-events-auto w-full transition-all duration-300 translate-y-2 opacity-0 " +
+    borderClass;
+  toast.innerHTML =
+    '<i class="' + iconClass + ' text-xl shrink-0"></i>' +
+    '<p class="text-xs font-semibold text-slate-800 flex-grow leading-tight">' + message + "</p>" +
+    '<button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-900 text-lg cursor-pointer"><i class="ri-close-line"></i></button>';
+
+  container.appendChild(toast);
+
+  setTimeout(() => toast.classList.remove("translate-y-2", "opacity-0"), 10);
+  setTimeout(() => {
+    toast.classList.add("translate-y-2", "opacity-0");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+};
