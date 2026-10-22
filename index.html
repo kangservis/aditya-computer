@@ -639,17 +639,9 @@
         </div>
         <!-- Konten Gambar & Info Utama -->
         <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
-          <div
-            class="w-full sm:w-1/3 bg-slate-50 rounded-xl p-3 h-36 flex items-center justify-center border border-slate-100 shrink-0"
-          >
-            <img
-              id="detail-image"
-              src=""
-              alt="Detail Gambar"
-              onclick="openLightbox(this.src)"
-              class="max-h-full max-w-full object-contain cursor-zoom-in"
-              title="Klik untuk memperbesar"
-            />
+          <!-- Wadah Slider Gambar Detail (Dinamis via JS) -->
+          <div id="detail-slider-container" class="relative w-full sm:w-1/3 bg-slate-50 rounded-xl h-48 sm:h-auto flex items-center justify-center border border-slate-100 shrink-0 overflow-hidden group">
+             <!-- Slider akan disuntikkan via JS di sini -->
           </div>
           <div class="w-full sm:w-2/3 space-y-1">
             <p
@@ -782,23 +774,32 @@
       </div>
     </div>
 
-    <!-- LIGHTBOX IMAGE FULLSCREEN MODAL -->
+   <!-- LIGHTBOX IMAGE FULLSCREEN MODAL (DENGAN SLIDER) -->
+    <!-- ⚠️ PERUBAHAN 1: Menambahkan class 'group' di div utama paling belakang -->
     <div
       id="image-lightbox"
-      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm group"
     >
+      <!-- Tombol Tutup -->
       <button
         onclick="closeLightbox()"
-        class="absolute top-4 right-4 text-white hover:text-red-500 text-3xl hover:scale-110 transition-transform cursor-pointer"
+        class="absolute top-4 right-4 z-50 text-white hover:text-red-500 text-3xl hover:scale-110 transition-transform cursor-pointer"
       >
         <i class="ri-close-line"></i>
       </button>
-      <img
-        id="lightbox-img"
-        src=""
-        alt="Fullscreen Image"
-        class="max-h-full max-w-full object-contain rounded-xl shadow-2xl scale-95 transition-transform duration-300"
-      />
+      
+      <!-- Wadah Slider Lightbox -->
+      <div id="lightbox-slider-container" class="w-full h-full"></div>
+
+      <!-- Tombol Navigasi Lightbox -->
+      <div id="lightbox-nav" class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 md:px-6 pointer-events-none hidden z-40">
+          <!-- ⚠️ PERUBAHAN 2: Menambahkan hidden md:flex dan opacity-0 group-hover:opacity-100 -->
+          <button onclick="scrollSlider(event, 'lightbox', -1)" class="pointer-events-auto w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-white/20 text-white rounded-full hidden md:flex items-center justify-center backdrop-blur-md transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-left-s-line text-2xl md:text-3xl"></i></button>
+          <button onclick="scrollSlider(event, 'lightbox', 1)" class="pointer-events-auto w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-white/20 text-white rounded-full hidden md:flex items-center justify-center backdrop-blur-md transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-right-s-line text-2xl md:text-3xl"></i></button>
+      </div>
+
+      <!-- Indikator Halaman -->
+      <div id="lightbox-indicator" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-xs font-bold font-mono bg-black/50 px-4 py-1.5 rounded-full tracking-widest hidden z-40"></div>
     </div>
 
     <!-- TOAST NOTIFICATION CONTAINER (Wadah Notifikasi Kustom) -->
@@ -927,72 +928,71 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      // Render Produk (Kini Mendukung Detail Pop-Up Saat Judul Diklik)
+     // 1. UPDATE: Render Produk (Meneruskan ID produk & indeks gambar ke Lightbox)
       function renderProducts(data) {
         const grid = document.getElementById("product-grid");
         grid.innerHTML = "";
-
+        
         if (data.length === 0) {
-          grid.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-slate-400">
-                        <i class="ri-search-line text-4xl block mb-2"></i>
-                        <p class="text-sm font-semibold">Produk tidak ditemukan.</p>
-                    </div>`;
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400"><i class="ri-search-line text-4xl block mb-2"></i><p class="text-sm font-semibold">Produk tidak ditemukan.</p></div>`;
           return;
         }
 
         data.forEach((prod) => {
-          const proxiedImg = getProxyUrl(prod.image);
-          const specBadges = prod.specs
-            .map(
-              (s) =>
-                `<span class="text-[9px] bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded-sm truncate max-w-[120px]">${s}</span>`,
-            )
-            .join("");
+          // Fallback array gambar
+          const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
+          
+          let sliderHtml = `<div id="slider-${prod.id}" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative scroll-smooth items-center">`;
+          imagesArray.forEach((imgUrl, idx) => {
+             const pxImg = window.getProxyUrl(imgUrl);
+             sliderHtml += `
+               <div class="w-full h-full shrink-0 snap-center flex items-center justify-center p-2 md:p-4 relative">
+                 <!-- ⚠️ PERUBAHAN: Memanggil openLightbox dengan parameter (ID Produk, Indeks Foto) -->
+                 <img src="${pxImg}" alt="${prod.name} - Foto ${idx+1}"
+                      onclick="openLightbox('${prod.id}', ${idx})" 
+                      class="max-h-full max-w-full object-contain transition-transform duration-300 cursor-zoom-in group-hover:scale-105" 
+                      title="Klik untuk memperbesar">
+               </div>
+             `;
+          });
+          sliderHtml += `</div>`;
 
+          let navButtonsHtml = '';
+          if (imagesArray.length > 1) {
+             navButtonsHtml = `
+                <!-- Ditambahkan hidden md:flex dan opacity-0 group-hover:opacity-100 -->
+                <button onclick="scrollSlider(event, '${prod.id}', -1)" class="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 md:w-7 md:h-7 bg-white/90 hover:bg-white rounded-full hidden md:flex items-center justify-center shadow-md text-slate-600 hover:text-red-600 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-left-s-line text-sm md:text-base"></i></button>
+                <button onclick="scrollSlider(event, '${prod.id}', 1)" class="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 md:w-7 md:h-7 bg-white/90 hover:bg-white rounded-full hidden md:flex items-center justify-center shadow-md text-slate-600 hover:text-red-600 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-right-s-line text-sm md:text-base"></i></button>
+                
+                <!-- Indikator angka tetap dibiarkan agar pengguna HP tahu ada gambar lain -->
+                <div class="absolute bottom-1.5 right-1.5 bg-black/40 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm z-20 pointer-events-none flex items-center gap-1 shadow-sm"><i class="ri-image-2-line"></i> ${imagesArray.length}</div>
+             `;
+          }
+
+          const specBadges = prod.specs.map(s => `<span class="text-[9px] bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded-sm truncate max-w-[120px]">${s}</span>`).join("");
           const outOfStock = prod.stock === 0;
-
-          // Variabel pembantu HTML independen (Menghindari kerancuan compiler Prettier)
-          const labelHabisHtml = outOfStock
-            ? '<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="text-white text-[10px] md:text-xs font-bold px-2 py-1 bg-red-600 rounded">HABIS</span></div>'
-            : "";
-
-          const tombolBeliHtml = outOfStock
-            ? '<button disabled class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all bg-slate-100 text-slate-400 cursor-not-allowed">Beli</button>'
-            : `<button onclick="addToCart('${prod.id}')" class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all cursor-pointer bg-red-600 text-white hover:bg-red-700">Beli</button>`;
-
-          // Logika Badge Second
-          const conditionBadgeHtml =
-            prod.condition === "Second"
-              ? '<span class="absolute top-2 left-2 z-10 px-2 py-0.5 bg-orange-500/90 backdrop-blur-sm text-white text-[9px] font-bold rounded shadow-sm tracking-wider">SECOND</span>'
-              : "";
+          const labelHabisHtml = outOfStock ? '<div class="absolute inset-0 bg-black/60 flex items-center justify-center z-30 pointer-events-none"><span class="text-white text-[10px] md:text-xs font-bold px-2 py-1 bg-red-600 rounded">HABIS</span></div>' : "";
+          const tombolBeliHtml = outOfStock ? '<button disabled class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all bg-slate-100 text-slate-400 cursor-not-allowed">Beli</button>' : `<button onclick="addToCart('${prod.id}')" class="w-full sm:w-auto px-2.5 py-1.5 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all cursor-pointer bg-red-600 text-white hover:bg-red-700 shadow-sm">Beli</button>`;
+          const conditionBadgeHtml = prod.condition === "Second" ? '<span class="absolute top-2 left-2 z-30 px-2 py-0.5 bg-orange-500/90 backdrop-blur-sm text-white text-[9px] font-bold rounded shadow-sm tracking-wider pointer-events-none">SECOND</span>' : "";
 
           const cardHtml = `
-                    <div class="bento-card flex flex-col justify-between h-full bg-white border border-slate-100 rounded-xl md:rounded-2xl overflow-hidden group shadow-xs">
-                        <div class="relative h-32 md:h-48 bg-slate-100/60 flex items-center justify-center p-2 md:p-4">
-                            ${conditionBadgeHtml}
-                           <img src="${proxiedImg}" alt="${prod.name}"
-                                 onclick="openLightbox('${proxiedImg}')" 
-                                 class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 cursor-zoom-in" 
-                                 title="Klik untuk memperbesar">
-                            ${labelHabisHtml}
-                        </div>
-                        <div class="p-3 md:p-5 flex-grow flex flex-col justify-between gap-1.5 md:gap-3">
-                            <div class="space-y-1 md:space-y-2">
-                                <span class="text-[9px] md:text-[10px] text-red-600 font-bold tracking-wider uppercase">${prod.category}</span>
-                                <!-- 👇 SEKARANG JUDUL DI-KLIK AKAN MEMBUKA MODAL DETAIL 👇 -->
-                                <h3 class="font-display font-semibold text-xs md:text-base text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 md:line-clamp-1 h-8 md:h-auto cursor-pointer" 
-                                    onclick="openProductDetail('${prod.id}')"
-                                    title="Klik untuk melihat detail">${prod.name}</h3>
-                                <p class="text-[11px] text-slate-500 line-clamp-2 hidden sm:block">${prod.description}</p>
-                                <div class="flex flex-wrap gap-1 h-10 md:h-auto overflow-hidden">${specBadges}</div>
-                            </div>
-                            <div class="pt-2 md:pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 md:gap-2">
-                                <span class="font-display font-bold text-red-700 text-xs sm:text-sm md:text-base">${formatRupiah(prod.price)}</span>
-                                ${tombolBeliHtml}
-                            </div>
-                        </div>
-                    </div>`;
+            <div class="bento-card flex flex-col justify-between h-full bg-white border border-slate-100 rounded-xl md:rounded-2xl overflow-hidden group shadow-xs">
+                <div class="relative h-36 md:h-48 bg-slate-100/60 flex items-center justify-center border-b border-slate-100 overflow-hidden">
+                    ${conditionBadgeHtml} ${sliderHtml} ${navButtonsHtml} ${labelHabisHtml}
+                </div>
+                <div class="p-3 md:p-5 flex-grow flex flex-col justify-between gap-1.5 md:gap-3">
+                    <div class="space-y-1 md:space-y-2">
+                        <span class="text-[9px] md:text-[10px] text-red-600 font-bold tracking-wider uppercase">${prod.category}</span>
+                        <h3 class="font-display font-semibold text-xs md:text-base text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 md:line-clamp-1 h-8 md:h-auto cursor-pointer" onclick="openProductDetail('${prod.id}')">${prod.name}</h3>
+                        <p class="text-[11px] text-slate-500 line-clamp-2 hidden sm:block">${prod.description}</p>
+                        <div class="flex flex-wrap gap-1 h-10 md:h-auto overflow-hidden">${specBadges}</div>
+                    </div>
+                    <div class="pt-2 md:pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 md:gap-2">
+                        <span class="font-display font-bold text-red-700 text-xs sm:text-sm md:text-base">${formatRupiah(prod.price)}</span>
+                        ${tombolBeliHtml}
+                    </div>
+                </div>
+            </div>`;
           grid.insertAdjacentHTML("beforeend", cardHtml);
         });
       }
@@ -1204,6 +1204,33 @@
         });
       };
 
+// --- FUNGSI GESER SLIDER GAMBAR PRODUK (0 KB Vanilla JS - Looping) ---
+      window.scrollSlider = (event, prodId, direction) => {
+        event.stopPropagation(); // Mencegah bentrok dengan event klik ke modal detail
+        const slider = document.getElementById(`slider-${prodId}`);
+        if (slider) {
+          const scrollAmount = slider.clientWidth;
+          const currentScroll = slider.scrollLeft;
+          const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+          if (direction === 1) {
+            // Geser ke kanan: Jika sudah mentok kanan, kembali ke gambar pertama
+            if (currentScroll >= maxScroll - 5) { // Toleransi 5px untuk presisi layar HP
+              slider.scrollTo({ left: 0, behavior: "smooth" });
+            } else {
+              slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+            }
+          } else {
+            // Geser ke kiri: Jika sedang di gambar pertama, lompat ke gambar terakhir
+            if (currentScroll <= 5) {
+              slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+            } else {
+              slider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+            }
+          }
+        }
+      };
+
       function formatRupiah(num) {
         return new Intl.NumberFormat("id-ID", {
           style: "currency",
@@ -1379,49 +1406,139 @@
         );
       }
 
-      function openLightbox(imgSrc) {
+      // 3. UPDATE: Lightbox (Layar Penuh, Support Swipe multi-gambar)
+      window.openLightbox = (prodId, startIndex = 0) => {
+        // Fallback jika ID yang dikirim ternyata URL gambar biasa (seperti klik gambar di Artikel)
+        if (!prodId || prodId.startsWith("http") || prodId.startsWith("img/")) {
+            renderFallbackLightbox(prodId);
+            return;
+        }
+
+        const prod = window.PRODUCTS_DATA.find((p) => p.id === prodId);
+        if (!prod) return;
+
+        const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
+        
+        let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full scroll-smooth items-center">`;
+        imagesArray.forEach((imgUrl) => {
+           const pxImg = window.getProxyUrl(imgUrl);
+           sliderHtml += `
+             <div class="w-full h-full shrink-0 snap-center flex items-center justify-center p-2 md:p-12 relative">
+               <img src="${pxImg}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+             </div>`;
+        });
+        sliderHtml += `</div>`;
+
+        document.getElementById("lightbox-slider-container").innerHTML = sliderHtml;
+
+        const navMenu = document.getElementById("lightbox-nav");
+        const indicator = document.getElementById("lightbox-indicator");
+
+        if (imagesArray.length > 1) {
+           navMenu.classList.remove("hidden");
+           indicator.classList.remove("hidden");
+           indicator.innerText = `${startIndex + 1} / ${imagesArray.length}`;
+
+           // Update angka indikator saat digeser
+           const sliderEl = document.getElementById("slider-lightbox");
+           sliderEl.addEventListener("scroll", () => {
+               const currentIndex = Math.round(sliderEl.scrollLeft / sliderEl.clientWidth);
+               indicator.innerText = `${currentIndex + 1} / ${imagesArray.length}`;
+           });
+        } else {
+           navMenu.classList.add("hidden");
+           indicator.classList.add("hidden");
+        }
+
         const lightbox = document.getElementById("image-lightbox");
-        const lightboxImg = document.getElementById("lightbox-img");
-        lightboxImg.src = imgSrc;
         lightbox.classList.remove("hidden");
-        setTimeout(() => {
-          lightboxImg.classList.remove("scale-95");
-          lightboxImg.classList.add("scale-100");
-        }, 50);
         document.body.style.overflow = "hidden";
+
+        // Scroll seketika ke foto yang diklik & mainkan animasi pop
+        setTimeout(() => {
+            const sliderEl = document.getElementById("slider-lightbox");
+            if (sliderEl && startIndex > 0) {
+                sliderEl.scrollTo({ left: sliderEl.clientWidth * startIndex, behavior: "instant" });
+            }
+            document.querySelectorAll('.lightbox-inner-img').forEach(img => {
+                img.classList.remove("scale-95");
+                img.classList.add("scale-100");
+            });
+        }, 10);
+      };
+
+      // Fungsi Fallback Lightbox (Jika dipanggil dengan 1 URL biasa)
+      function renderFallbackLightbox(imgUrl) {
+         document.getElementById("lightbox-slider-container").innerHTML = `
+           <div class="w-full h-full flex items-center justify-center p-4 md:p-12">
+             <img src="${imgUrl}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+           </div>`;
+         document.getElementById("lightbox-nav").classList.add("hidden");
+         document.getElementById("lightbox-indicator").classList.add("hidden");
+         
+         const lightbox = document.getElementById("image-lightbox");
+         lightbox.classList.remove("hidden");
+         document.body.style.overflow = "hidden";
+         
+         setTimeout(() => {
+            const img = document.querySelector('.lightbox-inner-img');
+            if(img) { img.classList.remove("scale-95"); img.classList.add("scale-100"); }
+         }, 10);
       }
 
-      function closeLightbox() {
+     // 4. UPDATE: Fungsi Tutup Lightbox (Dengan animasi mengecil)
+      window.closeLightbox = () => {
         const lightbox = document.getElementById("image-lightbox");
-        const lightboxImg = document.getElementById("lightbox-img");
-        lightboxImg.classList.remove("scale-100");
-        lightboxImg.classList.add("scale-95");
-        lightbox.classList.add("hidden");
-        document.body.style.overflow = "";
-      }
+        document.querySelectorAll('.lightbox-inner-img').forEach(img => {
+            img.classList.remove("scale-100");
+            img.classList.add("scale-95");
+        });
+        
+        // Tunggu animasi mengecil selesai sebelum wadah di-hide
+        setTimeout(() => {
+            lightbox.classList.add("hidden");
+            document.getElementById("lightbox-slider-container").innerHTML = ""; // Bersihkan memori DOM
+            document.body.style.overflow = "";
+        }, 200);
+      };
 
-      // Fungsi Membuka Modal Detail Produk
+     // 2. UPDATE: Modal Detail Produk (Kini dengan Mini-Slider 0 KB)
       function openProductDetail(prodId) {
         const prod = PRODUCTS_DATA.find((p) => p.id === prodId);
         if (!prod) return;
 
-        // Isi data ke elemen modal
-        document.getElementById("detail-category").innerText = prod.category;
-        document.getElementById("detail-image").src = getProxyUrl(prod.image);
-        document.getElementById("detail-image").alt = prod.name;
-        const condition = prod.condition || "Baru";
-        const conditionColor =
-          condition === "Second" ? "text-orange-500" : "text-emerald-500";
-        document.getElementById("detail-brand").innerHTML =
-          `${prod.brand} <span class="mx-1 font-normal text-slate-300">•</span> <span class="${conditionColor}">${condition}</span>`;
-        document.getElementById("detail-title").innerText = prod.name;
-        document.getElementById("detail-price").innerText = formatRupiah(
-          prod.price,
-        );
-        document.getElementById("detail-description").innerText =
-          prod.description;
+        const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
+        
+        let sliderHtml = `<div id="slider-detail-${prod.id}" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative scroll-smooth items-center">`;
+        imagesArray.forEach((imgUrl, idx) => {
+           const pxImg = window.getProxyUrl(imgUrl);
+           sliderHtml += `
+             <div class="w-full h-full shrink-0 snap-center flex items-center justify-center p-2 relative">
+               <img src="${pxImg}" alt="Foto ${idx+1}" onclick="openLightbox('${prod.id}', ${idx})" class="max-h-full max-w-full object-contain cursor-zoom-in transition-transform duration-300 hover:scale-105">
+             </div>`;
+        });
+        sliderHtml += `</div>`;
 
-        // Atur warna dan teks stok
+        let navHtml = '';
+        if (imagesArray.length > 1) {
+           navHtml = `
+              <button onclick="scrollSlider(event, 'detail-${prod.id}', -1)" class="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full hidden sm:flex items-center justify-center shadow-sm text-slate-600 hover:text-red-600 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-left-s-line"></i></button>
+              <button onclick="scrollSlider(event, 'detail-${prod.id}', 1)" class="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full hidden sm:flex items-center justify-center shadow-sm text-slate-600 hover:text-red-600 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"><i class="ri-arrow-right-s-line"></i></button>
+              <div class="absolute bottom-1 right-1 bg-black/40 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm z-20 pointer-events-none flex items-center gap-1"><i class="ri-image-2-line"></i> ${imagesArray.length}</div>
+           `;
+        }
+        
+        // Memasukkan slider ke dalam container HTML yang baru
+        document.getElementById("detail-slider-container").innerHTML = sliderHtml + navHtml;
+
+        // Info Produk Lainnya
+        document.getElementById("detail-category").innerText = prod.category;
+        const condition = prod.condition || "Baru";
+        document.getElementById("detail-brand").innerHTML = `${prod.brand} <span class="mx-1 font-normal text-slate-300">•</span> <span class="${condition === "Second" ? "text-orange-500" : "text-emerald-500"}">${condition}</span>`;
+        document.getElementById("detail-title").innerText = prod.name;
+        document.getElementById("detail-price").innerText = formatRupiah(prod.price);
+        document.getElementById("detail-description").innerText = prod.description;
+
         const stockEl = document.getElementById("detail-stock");
         if (prod.stock > 0) {
           stockEl.innerText = `Stok: Tersedia (${prod.stock} unit)`;
@@ -1431,39 +1548,23 @@
           stockEl.className = "text-[11px] font-bold text-rose-600";
         }
 
-        // Render spesifikasi lengkap
-        const specsContainer = document.getElementById("detail-specs");
-        specsContainer.innerHTML = prod.specs
-          .map(
-            (s) =>
-              `<span class="text-[14px] bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-mono">${s}</span>`,
-          )
-          .join("");
+        document.getElementById("detail-specs").innerHTML = prod.specs.map(s => `<span class="text-[14px] bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-mono">${s}</span>`).join("");
 
-        // Atur tombol beli di dalam modal
         const buyBtn = document.getElementById("detail-buy-btn");
         if (prod.stock > 0) {
           buyBtn.disabled = false;
           buyBtn.innerText = "Masukkan Keranjang";
-          buyBtn.className =
-            "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-semibold transition-all bg-red-600 text-white hover:bg-red-700 cursor-pointer shadow-md shadow-red-100";
-          buyBtn.setAttribute(
-            "onclick",
-            `addToCart('${prod.id}'); closeProductDetail();`,
-          );
+          buyBtn.className = "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-semibold transition-all bg-red-600 text-white hover:bg-red-700 cursor-pointer shadow-md shadow-red-100";
+          buyBtn.setAttribute("onclick", `addToCart('${prod.id}'); closeProductDetail();`);
         } else {
           buyBtn.disabled = true;
           buyBtn.innerText = "Stok Habis";
-          buyBtn.className =
-            "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-400 cursor-not-allowed";
+          buyBtn.className = "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-400 cursor-not-allowed";
           buyBtn.setAttribute("onclick", "");
         }
 
-        // Tampilkan modal
-        document
-          .getElementById("product-detail-modal")
-          .classList.remove("hidden");
-        document.body.style.overflow = "hidden"; // Kunci scroll layar utama
+        document.getElementById("product-detail-modal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
       }
 
       // Fungsi Menutup Modal Detail Produk
