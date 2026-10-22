@@ -13,6 +13,8 @@
     <!-- Tailwind CSS v3 via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="globals.css" />
+    <!-- SortableJS untuk fitur Drag & Drop Gambar -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <!-- Google Fonts & Remix Icon -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Outfit:wght@500;700;900&display=swap"
@@ -775,78 +777,95 @@
         }
       };
 
-// --- STATE MULTI FOTO ---
-      let currentSelectedFiles = [];
-      let currentExistingUrls = [];
+// --- STATE MULTI FOTO (UNIFIED) ---
+      let productPhotos = [];
 
-      // --- FUNGSI HAPUS FOTO ---
-      window.removeExistingImage = (index) => {
-        currentExistingUrls.splice(index, 1);
-        document.getElementById("form-prod-image-url").value = JSON.stringify(currentExistingUrls);
-        renderAdminProductPreviews();
+      // Fungsi bantu baca file ke Base64 (untuk preview)
+      const readFileAsDataURL = (file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
       };
 
-      window.removeSelectedFile = (index) => {
-        currentSelectedFiles.splice(index, 1);
+      // --- FUNGSI HAPUS FOTO ---
+      window.removePhoto = (id) => {
+        productPhotos = productPhotos.filter(p => p.id !== id);
         renderAdminProductPreviews();
       };
 
       // --- HANDLE FILE (Bisa tambah foto nyicil) ---
-      window.handleProductImageSelect = (event) => {
+      window.handleProductImageSelect = async (event) => {
         const newFiles = Array.from(event.target.files);
-        const totalPhotos = currentExistingUrls.length + currentSelectedFiles.length + newFiles.length;
         
-        if (totalPhotos > 5) {
+        if (productPhotos.length + newFiles.length > 5) {
           window.showNotification("Total maksimal 5 foto per produk!", "warning");
           event.target.value = "";
           return;
         }
         
-        // Gabungkan memori foto yang lama dan baru dipilih
-        currentSelectedFiles = [...currentSelectedFiles, ...newFiles];
-        event.target.value = ""; // Reset value agar input file bisa dipakai pilih lagi
+        // Proses setiap file menjadi objek state
+        for (let file of newFiles) {
+          const previewBase64 = await readFileAsDataURL(file);
+          productPhotos.push({
+            id: 'photo_' + Date.now() + Math.random().toString(36).substr(2, 5),
+            type: 'new',
+            file: file,
+            url: null,
+            preview: previewBase64
+          });
+        }
+        
+        event.target.value = ""; // Reset input
         renderAdminProductPreviews();
       };
 
       function renderAdminProductPreviews() {
         const thumbsContainer = document.getElementById("preview-prod-thumbs");
         thumbsContainer.innerHTML = "";
-        const hasFiles = currentSelectedFiles.length > 0;
-        const hasExisting = currentExistingUrls.length > 0;
-
-        if (!hasFiles && !hasExisting) {
+        
+        if (productPhotos.length === 0) {
           thumbsContainer.classList.add("hidden");
           return;
         }
         thumbsContainer.classList.remove("hidden");
 
-        // 1. Render foto lama (jika edit) + Tombol Hapus
-        currentExistingUrls.forEach((url, idx) => {
-          const proxied = window.getProxyUrl(url);
+        productPhotos.forEach((photo, idx) => {
+          const isNew = photo.type === 'new';
+          const labelHtml = isNew 
+            ? `<span class="absolute bottom-0 inset-x-0 bg-red-600/90 text-white text-[8px] text-center py-0.5">Posisi ${idx + 1} (Baru)</span>`
+            : `<span class="absolute bottom-0 inset-x-0 bg-slate-900/70 text-white text-[8px] text-center py-0.5">Posisi ${idx + 1}</span>`;
+            
+          const borderClass = isNew ? "border-red-400 border-2" : "border-slate-200 border";
+          
           thumbsContainer.innerHTML += `
-            <div class="relative h-16 rounded-lg border border-slate-200 overflow-hidden bg-slate-50 group">
-              <img src="${proxied}" class="w-full h-full object-contain p-0.5">
-              <span class="absolute bottom-0 inset-x-0 bg-slate-900/70 text-white text-[8px] text-center py-0.5">Foto ${idx + 1}</span>
-              <button type="button" onclick="removeExistingImage(${idx})" class="absolute top-1 right-1 bg-red-500/90 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow-sm hover:scale-110 transition-transform cursor-pointer">
+            <div data-id="${photo.id}" class="relative h-16 rounded-lg ${borderClass} overflow-hidden bg-slate-50 group cursor-move hover:shadow-md hover:scale-105 transition-all">
+              <img src="${photo.preview}" class="w-full h-full object-contain p-0.5 pointer-events-none">
+              ${labelHtml}
+              <!-- Ikon Indikator Geser -->
+              <div class="absolute top-1 left-1 bg-black/40 text-white rounded w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+                <i class="ri-drag-move-fill"></i>
+              </div>
+              <button type="button" onclick="removePhoto('${photo.id}')" class="absolute top-1 right-1 bg-red-500/90 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow-sm hover:scale-110 transition-transform cursor-pointer z-10">
                 <i class="ri-close-line"></i>
               </button>
             </div>`;
         });
+      }
 
-        // 2. Render foto baru + Tombol Hapus
-        currentSelectedFiles.forEach((file, idx) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            thumbsContainer.innerHTML += `
-              <div class="relative h-16 rounded-lg border-2 border-red-400 overflow-hidden bg-slate-50 group">
-                <img src="${e.target.result}" class="w-full h-full object-contain p-0.5">
-                <span class="absolute bottom-0 inset-x-0 bg-red-600/90 text-white text-[8px] text-center py-0.5">Baru</span>
-                <button type="button" onclick="removeSelectedFile(${idx})" class="absolute top-1 right-1 bg-red-500/90 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow-sm hover:scale-110 transition-transform cursor-pointer">
-                  <i class="ri-close-line"></i>
-                </button>
-              </div>`;
-          };
-          reader.readAsDataURL(file);
+      // --- INIT SORTABLE JS (Fungsi Geser Otomatis) ---
+      const sortableEl = document.getElementById('preview-prod-thumbs');
+      if (sortableEl) {
+        new Sortable(sortableEl, {
+            animation: 200,
+            ghostClass: 'opacity-40', // Efek transparan saat digeser
+            onEnd: function (evt) {
+               // Sesuaikan urutan array kita dengan urutan akhir dari geseran user
+               const movedItem = productPhotos.splice(evt.oldIndex, 1)[0];
+               productPhotos.splice(evt.newIndex, 0, movedItem);
+               renderAdminProductPreviews(); // Gambar ulang agar label angka berubah
+            }
         });
       }
 
@@ -1115,22 +1134,29 @@
           const btnSave = document.getElementById("btn-save-prod");
           btnSave.disabled = true;
 
-          let finalImages = [...currentExistingUrls];
-
-          // 1. Upload foto baru beruntun ke ImgBB
-          if (currentSelectedFiles.length > 0) {
-            for (let i = 0; i < currentSelectedFiles.length; i++) {
-              btnSave.innerHTML = `<i class="ri-loader-4-line animate-spin"></i> Foto ${i + 1}/${currentSelectedFiles.length}...`;
-              const uploadedUrl = await uploadImageToImgBB(currentSelectedFiles[i]);
-              if (!uploadedUrl) {
-                window.showNotification(`Gagal unggah foto ke-${i + 1}.`, "error");
-                btnSave.innerHTML = '<i class="ri-save-line"></i> Simpan Data';
-                btnSave.disabled = false;
-                return;
+          // 1. Kumpulkan URL mengikuti urutan hasil geseran (Drag & Drop)
+            let finalImages = [];
+            
+            for (let i = 0; i < productPhotos.length; i++) {
+              let photo = productPhotos[i];
+              
+              if (photo.type === 'existing') {
+                  // Jika foto lama, langsung masukkan URL-nya
+                  finalImages.push(photo.url);
+              } else {
+                  // Jika foto baru, upload ke ImgBB dulu
+                  btnSave.innerHTML = `<i class="ri-loader-4-line animate-spin"></i> Foto ${i + 1}/${productPhotos.length}...`;
+                  const uploadedUrl = await uploadImageToImgBB(photo.file);
+                  
+                  if (!uploadedUrl) {
+                    window.showNotification(`Gagal unggah foto posisi ${i + 1}.`, "error");
+                    btnSave.innerHTML = '<i class="ri-save-line"></i> Simpan Data';
+                    btnSave.disabled = false;
+                    return;
+                  }
+                  finalImages.push(uploadedUrl);
               }
-              finalImages.push(uploadedUrl);
             }
-          }
 
           if (finalImages.length === 0) {
             window.showNotification("Harap pilih minimal 1 foto!", "warning");
@@ -1178,13 +1204,11 @@
 
       window.closeProductForm = () => {
         document.getElementById("product-modal").classList.add("hidden");
-        // Hapus memori foto agar tidak bocor ke form selanjutnya
-        currentSelectedFiles = [];
-        currentExistingUrls = [];
+        productPhotos = []; // Bersihkan memori foto
         document.getElementById("form-prod-image-file").value = "";
-        document.getElementById("form-prod-image-url").value = "";
         renderAdminProductPreviews();
       };
+      
       window.editProduct = (id) => {
         const prod = ALL_PRODUCTS.find((p) => p.id === id);
         if (!prod) return;
@@ -1199,14 +1223,22 @@
         document.getElementById("form-prod-price").value = prod.price;
         document.getElementById("form-prod-desc").value = prod.description;
 
-        // Atur Preview Multi-Gambar Mode Edit
-        currentSelectedFiles = [];
-        // Dukung data lama (string) maupun data baru (array)
-        currentExistingUrls = prod.images && prod.images.length > 0 
-          ? prod.images 
-          : (prod.image ? [prod.image] : []);
-        document.getElementById("form-prod-image-url").value = JSON.stringify(currentExistingUrls);
-        renderAdminProductPreviews();
+          // Atur Preview Multi-Gambar Mode Edit
+          productPhotos = [];
+          const existing = prod.images && prod.images.length > 0 
+            ? prod.images 
+            : (prod.image ? [prod.image] : []);
+            
+          existing.forEach(imgUrl => {
+            productPhotos.push({
+              id: 'photo_' + Date.now() + Math.random().toString(36).substr(2, 5),
+              type: 'existing',
+              file: null,
+              url: imgUrl,
+              preview: window.getProxyUrl(imgUrl)
+            });
+          });
+          renderAdminProductPreviews();
 
         document.getElementById("form-prod-specs").value = prod.specs
           ? prod.specs.join(", ")
