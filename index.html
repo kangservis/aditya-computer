@@ -1421,9 +1421,9 @@
         );
       }
 
-      // 3. UPDATE: Lightbox (Layar Penuh, Support Swipe multi-gambar)
+     // 3. UPDATE: Lightbox (Layar Penuh, Support Swipe multi-gambar) - INSTAN TANPA ANIMASI
       window.openLightbox = (prodId, startIndex = 0) => {
-        // Fallback jika ID yang dikirim ternyata URL gambar biasa (seperti klik gambar di Artikel)
+        // Fallback jika ID yang dikirim ternyata URL gambar biasa
         if (!prodId || prodId.startsWith("http") || prodId.startsWith("img/")) {
             renderFallbackLightbox(prodId);
             return;
@@ -1434,13 +1434,13 @@
 
         const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
         
-          // ⚠️ OPTIMASI MOBILE: Hapus scroll-smooth dan shadow-50px yang menyiksa GPU
+          // ⚠️ OPTIMASI MOBILE: HTML gambar bersih tanpa efek transition-transform atau scale
           let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full items-center">`;
           imagesArray.forEach((imgUrl) => {
             const pxImg = window.getProxyUrl(imgUrl);
             sliderHtml += `
               <div class="w-full h-full shrink-0 snap-center snap-always flex items-center justify-center p-2 md:p-12 relative">
-                <img src="${pxImg}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl">
+                <img src="${pxImg}" class="max-h-full max-w-full object-contain lightbox-inner-img rounded-xl">
               </div>`;
           });
           sliderHtml += `</div>`;
@@ -1450,45 +1450,40 @@
         const navMenu = document.getElementById("lightbox-nav");
         const indicator = document.getElementById("lightbox-indicator");
 
-        if (imagesArray.length > 1) {
-           navMenu.classList.remove("hidden");
-           indicator.classList.remove("hidden");
-           indicator.innerText = `${startIndex + 1} / ${imagesArray.length}`;
+          if (imagesArray.length > 1) {
+            navMenu.classList.remove("hidden");
+            indicator.classList.remove("hidden");
+            indicator.innerText = `${startIndex + 1} / ${imagesArray.length}`;
 
-           // Update angka indikator saat digeser
-           const sliderEl = document.getElementById("slider-lightbox");
-           sliderEl.addEventListener("scroll", () => {
-               const currentIndex = Math.round(sliderEl.scrollLeft / sliderEl.clientWidth);
-               indicator.innerText = `${currentIndex + 1} / ${imagesArray.length}`;
-           });
-        } else {
-           navMenu.classList.add("hidden");
-           indicator.classList.add("hidden");
-        }
+            const sliderEl = document.getElementById("slider-lightbox");
+            sliderEl.addEventListener("scroll", () => {
+                const currentIndex = Math.round(sliderEl.scrollLeft / sliderEl.clientWidth);
+                indicator.innerText = `${currentIndex + 1} / ${imagesArray.length}`;
+            });
+          } else {
+            navMenu.classList.add("hidden");
+            indicator.classList.add("hidden");
+          }
 
         const lightbox = document.getElementById("image-lightbox");
         lightbox.classList.remove("hidden");
         document.body.style.overflow = "hidden";
 
-        // Scroll seketika ke foto yang diklik & mainkan animasi pop
+        // ⚠️ OPTIMASI MOBILE: Scroll seketika ke foto yang diklik TANPA animasi pop
         setTimeout(() => {
             const sliderEl = document.getElementById("slider-lightbox");
             if (sliderEl && startIndex > 0) {
                 sliderEl.scrollTo({ left: sliderEl.clientWidth * startIndex, behavior: "instant" });
             }
-            document.querySelectorAll('.lightbox-inner-img').forEach(img => {
-                img.classList.remove("scale-95");
-                img.classList.add("scale-100");
-            });
         }, 10);
       };
 
-        // Fungsi Fallback Lightbox (Jika dipanggil dengan 1 URL biasa)
+       // Fungsi Fallback Lightbox (Instan Tanpa Animasi)
         function renderFallbackLightbox(imgUrl) {
           document.getElementById("lightbox-slider-container").innerHTML = `
             <div class="w-full h-full flex items-center justify-center p-4 md:p-12">
-              <!-- ⚠️ OPTIMASI MOBILE: Hapus bayangan (shadow) -->
-              <img src="${imgUrl}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl">
+              <!-- ⚠️ OPTIMASI MOBILE: Bersih dari class animasi dan bayangan -->
+              <img src="${imgUrl}" class="max-h-full max-w-full object-contain lightbox-inner-img rounded-xl">
             </div>`;
           document.getElementById("lightbox-nav").classList.add("hidden");
           document.getElementById("lightbox-indicator").classList.add("hidden");
@@ -1496,27 +1491,16 @@
           const lightbox = document.getElementById("image-lightbox");
           lightbox.classList.remove("hidden");
           document.body.style.overflow = "hidden";
-          
-          setTimeout(() => {
-              const img = document.querySelector('.lightbox-inner-img');
-              if(img) { img.classList.remove("scale-95"); img.classList.add("scale-100"); }
-          }, 10);
         }
-
-     // 4. UPDATE: Fungsi Tutup Lightbox (Dengan animasi mengecil)
+        
+    // 4. UPDATE: Fungsi Tutup Lightbox (Instan 0 Detik)
       window.closeLightbox = () => {
         const lightbox = document.getElementById("image-lightbox");
-        document.querySelectorAll('.lightbox-inner-img').forEach(img => {
-            img.classList.remove("scale-100");
-            img.classList.add("scale-95");
-        });
         
-        // Tunggu animasi mengecil selesai sebelum wadah di-hide
-        setTimeout(() => {
-            lightbox.classList.add("hidden");
-            document.getElementById("lightbox-slider-container").innerHTML = ""; // Bersihkan memori DOM
-            document.body.style.overflow = "";
-        }, 200);
+        // ⚠️ OPTIMASI MOBILE: Langsung tutup seketika tanpa jeda 200ms
+        lightbox.classList.add("hidden");
+        document.getElementById("lightbox-slider-container").innerHTML = ""; // Bersihkan memori DOM
+        document.body.style.overflow = ""; // Aktifkan scroll layar
       };
 
      // 2. UPDATE: Modal Detail Produk (Kini dengan Mini-Slider 0 KB)
