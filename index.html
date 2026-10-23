@@ -1225,19 +1225,22 @@
           const currentScroll = slider.scrollLeft;
           const maxScroll = slider.scrollWidth - slider.clientWidth;
 
+          // ⚠️ OPTIMASI MOBILE: Matikan animasi khusus untuk Lightbox (gambar besar)
+          const scrollMode = prodId === 'lightbox' ? 'auto' : 'smooth';
+
           if (direction === 1) {
-            // Geser ke kanan: Jika sudah mentok kanan, kembali ke gambar pertama
-            if (currentScroll >= maxScroll - 5) { // Toleransi 5px untuk presisi layar HP
-              slider.scrollTo({ left: 0, behavior: "smooth" });
+            // Geser ke kanan
+            if (currentScroll >= maxScroll - 5) { 
+              slider.scrollTo({ left: 0, behavior: scrollMode });
             } else {
-              slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+              slider.scrollBy({ left: scrollAmount, behavior: scrollMode });
             }
           } else {
-            // Geser ke kiri: Jika sedang di gambar pertama, lompat ke gambar terakhir
+            // Geser ke kiri
             if (currentScroll <= 5) {
-              slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+              slider.scrollTo({ left: maxScroll, behavior: scrollMode });
             } else {
-              slider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+              slider.scrollBy({ left: -scrollAmount, behavior: scrollMode });
             }
           }
         }
@@ -1431,7 +1434,7 @@
 
         const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
         
-        let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full scroll-smooth items-center">`;
+        let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full items-center">`;
         imagesArray.forEach((imgUrl) => {
            const pxImg = window.getProxyUrl(imgUrl);
            sliderHtml += `
