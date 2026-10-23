@@ -1434,15 +1434,16 @@
 
         const imagesArray = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
         
-        let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full items-center">`;
-        imagesArray.forEach((imgUrl) => {
-           const pxImg = window.getProxyUrl(imgUrl);
-           sliderHtml += `
-             <div class="w-full h-full shrink-0 snap-center snap-always flex items-center justify-center p-2 md:p-12 relative">
-               <img src="${pxImg}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-             </div>`;
-        });
-        sliderHtml += `</div>`;
+          // ⚠️ OPTIMASI MOBILE: Hapus scroll-smooth dan shadow-50px yang menyiksa GPU
+          let sliderHtml = `<div id="slider-lightbox" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full items-center">`;
+          imagesArray.forEach((imgUrl) => {
+            const pxImg = window.getProxyUrl(imgUrl);
+            sliderHtml += `
+              <div class="w-full h-full shrink-0 snap-center snap-always flex items-center justify-center p-2 md:p-12 relative">
+                <img src="${pxImg}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl">
+              </div>`;
+          });
+          sliderHtml += `</div>`;
 
         document.getElementById("lightbox-slider-container").innerHTML = sliderHtml;
 
@@ -1482,24 +1483,25 @@
         }, 10);
       };
 
-      // Fungsi Fallback Lightbox (Jika dipanggil dengan 1 URL biasa)
-      function renderFallbackLightbox(imgUrl) {
-         document.getElementById("lightbox-slider-container").innerHTML = `
-           <div class="w-full h-full flex items-center justify-center p-4 md:p-12">
-             <img src="${imgUrl}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-           </div>`;
-         document.getElementById("lightbox-nav").classList.add("hidden");
-         document.getElementById("lightbox-indicator").classList.add("hidden");
-         
-         const lightbox = document.getElementById("image-lightbox");
-         lightbox.classList.remove("hidden");
-         document.body.style.overflow = "hidden";
-         
-         setTimeout(() => {
-            const img = document.querySelector('.lightbox-inner-img');
-            if(img) { img.classList.remove("scale-95"); img.classList.add("scale-100"); }
-         }, 10);
-      }
+        // Fungsi Fallback Lightbox (Jika dipanggil dengan 1 URL biasa)
+        function renderFallbackLightbox(imgUrl) {
+          document.getElementById("lightbox-slider-container").innerHTML = `
+            <div class="w-full h-full flex items-center justify-center p-4 md:p-12">
+              <!-- ⚠️ OPTIMASI MOBILE: Hapus bayangan (shadow) -->
+              <img src="${imgUrl}" class="max-h-full max-w-full object-contain scale-95 transition-transform duration-300 lightbox-inner-img rounded-xl">
+            </div>`;
+          document.getElementById("lightbox-nav").classList.add("hidden");
+          document.getElementById("lightbox-indicator").classList.add("hidden");
+          
+          const lightbox = document.getElementById("image-lightbox");
+          lightbox.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+          
+          setTimeout(() => {
+              const img = document.querySelector('.lightbox-inner-img');
+              if(img) { img.classList.remove("scale-95"); img.classList.add("scale-100"); }
+          }, 10);
+        }
 
      // 4. UPDATE: Fungsi Tutup Lightbox (Dengan animasi mengecil)
       window.closeLightbox = () => {
